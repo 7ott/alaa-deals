@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#04271A">
 <title>Alaa Deals</title>
 <link rel="icon" type="image/webp" href="logo-mark.webp">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
 </head>
 <body>
@@ -423,7 +423,7 @@ async function remove(col,id){
 function handleErr(e){console.error(e);toast(e&&e.code==='42501'?'مش مسموح بالحفظ، سجّل دخولك تاني':'تعذّر الحفظ، حاول مرة أخرى')}
 const toEmail=u=>u.includes('@')?u.trim().toLowerCase():u.trim().toLowerCase().replace(/\s+/g,'')+'@'+(CFG.usernameDomain||'alaadeals.app');
 async function initStore(){
-  if(!window.supabase||!CFG.supabaseUrl||!CFG.supabaseAnonKey||CFG.supabaseUrl.includes('YOUR-')){
+  if(!window.supabase||!CFG.supabaseUrl||!CFG.supabaseAnonKey||CFG.supabaseUrl.includes('YOUR-')||CFG.supabaseAnonKey.includes('YOUR-')){
     $('#loginHint').textContent='السيستم لسه مش متوصل بـ Supabase. حط بيانات المشروع في ملف config.js.';
     $('#storeNote').innerHTML='<i style="background:var(--bad)"></i>غير متصل بقاعدة البيانات';return;
   }
