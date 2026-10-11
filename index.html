@@ -16,12 +16,12 @@
 /* Layout: emerald rail with the gold AD mark (right, RTL) · ivory working pane · gold reserved for money and the primary action */
 :root{
   color-scheme:light;
-  --bg:#F5F3EC; --surface:#FFFFFF; --sunk:#F0ECE1; --line:#E4DDCB; --line-2:#EDE8DB;
+  --bg:#F7F5EF; --surface:#FFFFFF; --sunk:#F0ECE1; --line:#E4DDCB; --line-2:#EDE8DB;
   --ink:#10251A; --muted:#67756C; --faint:#97A39A;
   --emerald:#0B3D27; --emerald-2:#14603F; --emerald-soft:#E2EFE6;
   --gold:#C9A04A; --gold-deep:#97701F; --gold-soft:#F6EDD5; --gold-ink:#2A1E05;
   --ok:#1D7A4B; --ok-soft:#E1F1E7; --warn:#9C6608; --warn-soft:#FAEFD7; --bad:#B03A35; --bad-soft:#F8E3E1; --info:#2C5C93; --info-soft:#E3EBF5;
-  --rail-a:#03241A; --rail-b:#073523; --rail-ink:#E9EFE9; --rail-muted:#94AE9F; --rail-line:rgba(217,180,90,.18);
+  --rail-a:#FFFFFF; --rail-b:#FBF8F0; --rail-ink:#10251A; --rail-muted:#7C8A80; --rail-line:#ECE5D3;
   --shadow:0 1px 2px rgba(16,37,26,.05),0 8px 24px -16px rgba(16,37,26,.18);
   --gold-grad:linear-gradient(135deg,#F2D584 0%,#CFA448 52%,#A27722 100%);
   --f-display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
@@ -29,20 +29,6 @@
   --f-latin:"Montserrat","Readex Pro",Arial,sans-serif;
   --r:10px;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#06140D; --surface:#0C1F15; --sunk:#10281C; --line:#1C3829; --line-2:#163122;
-  --ink:#EDE9DD; --muted:#9BB0A2; --faint:#6E8577;
-  --emerald:#0F3A26; --emerald-2:#5BBF8A; --emerald-soft:#123A27;
-  --gold:#DDB65E; --gold-deep:#E7C277; --gold-soft:#33290F; --gold-ink:#2A1E05;
-  --ok:#5EC891; --ok-soft:#133421; --warn:#E4B051; --warn-soft:#382B12; --bad:#EE817A; --bad-soft:#3A1C1A; --info:#86B2E6; --info-soft:#17283B;
-  --rail-a:#021A12; --rail-b:#05281B; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6); color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#06140D; --surface:#0C1F15; --sunk:#10281C; --line:#1C3829; --line-2:#163122;
-  --ink:#EDE9DD; --muted:#9BB0A2; --faint:#6E8577;
-  --emerald:#0F3A26; --emerald-2:#5BBF8A; --emerald-soft:#123A27;
-  --gold:#DDB65E; --gold-deep:#E7C277; --gold-soft:#33290F; --gold-ink:#2A1E05;
-  --ok:#5EC891; --ok-soft:#133421; --warn:#E4B051; --warn-soft:#382B12; --bad:#EE817A; --bad-soft:#3A1C1A; --info:#86B2E6; --info-soft:#17283B;
-  --rail-a:#021A12; --rail-b:#05281B; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6); color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{height:100%}
@@ -288,12 +274,137 @@ select.stage{border:1px solid var(--line);border-radius:999px;padding:5px 12px;f
   td.first::before,td.act::before{display:none}
   td.act{justify-content:flex-end}
 }
+
+/* ---------- light theme overrides ---------- */
+.wordmark .d{color:var(--emerald)}
+.lbrand{background:radial-gradient(700px 420px at 80% 0%,rgba(217,180,90,.20),transparent 60%),radial-gradient(600px 400px at 0% 100%,rgba(20,96,63,.08),transparent 60%),linear-gradient(160deg,#FFFDF7,#F3EEDF);color:var(--ink);border-inline-start:1px solid var(--line)}
+.lbrand::before{border-color:rgba(201,160,74,.35)}
+.lbrand::after{border-color:rgba(201,160,74,.18);box-shadow:0 0 0 60px rgba(201,160,74,.05),0 0 0 120px rgba(201,160,74,.03)}
+.lbrand img{width:min(190px,48%);filter:drop-shadow(0 14px 22px rgba(151,112,31,.25))}
+.lword{position:relative;display:grid;justify-items:center;gap:10px}
+.lword .wordmark{font-size:44px}
+.lbrand .pitch{color:var(--muted)}
+.lbrand .pitch b{color:var(--gold-deep)}
+.lfeat{position:relative;list-style:none;margin:6px 0 0;padding:0;display:grid;gap:10px;text-align:right}
+.lfeat li{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--ink);background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.lfeat span{font-family:var(--f-latin);font-weight:700;font-size:12px;color:var(--gold-deep);direction:ltr}
+.lform{background:var(--surface)}
+.rail{border-inline-start:1px solid var(--line);box-shadow:-8px 0 30px -24px rgba(16,37,26,.25)}
+.rail-brand img{width:84px;filter:drop-shadow(0 8px 12px rgba(151,112,31,.22))}
+.nav button:hover,.rail-foot button:hover{background:var(--sunk)}
+.nav button[aria-current="page"]{background:var(--emerald-soft);color:var(--emerald)}
+.nav button[aria-current="page"] svg{color:var(--emerald-2)}
+.nav .count{background:var(--sunk);color:var(--muted)}
+.nav button[aria-current="page"] .count{background:var(--surface);color:var(--emerald)}
+.who b{color:var(--ink)}
+.kpi.hero{background:radial-gradient(380px 200px at 0% 0%,rgba(242,213,132,.45),transparent 65%),linear-gradient(150deg,#FFFDF6,#F6EDD5);border-color:#E6D3A2;color:var(--ink)}
+.kpi.hero .l,.kpi.hero .s{color:#7A6A43}
+.kpi.hero .ic{background:var(--gold-grad);color:var(--gold-ink)}
+.kpi.hero .v{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--gold-deep)}
+.kpi.hero .v small{color:#9B8A62;-webkit-text-fill-color:#9B8A62}
+.dr-h{background:radial-gradient(400px 200px at 0% 0%,rgba(242,213,132,.35),transparent 65%),linear-gradient(160deg,#FFFDF7,#F3EEDF);color:var(--ink);border-bottom:1px solid var(--line)}
+.dr-h .x{color:var(--muted)}
+.dr-h .x:hover{background:var(--sunk);color:var(--ink)}
+.dr-h .ph{color:var(--gold-deep)}
+.copy{background:var(--surface);border:1px solid var(--line);color:var(--ink)}
+.scrim{background:rgba(16,37,26,.32)}
+.modal-h .mk{background:var(--emerald-soft);color:var(--emerald)}
+@media (max-width:760px){
+  .mhead{background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .mhead .icon-btn{color:var(--muted)}
+  .mhead .icon-btn:hover{background:var(--sunk);color:var(--ink)}
+  .lword .wordmark{font-size:34px}
+  .lbrand img{width:110px}
+  .lfeat{display:none}
+}
+
+/* ---------- question wizard ---------- */
+.wiz{width:100%;max-width:640px;max-height:92vh;display:flex;flex-direction:column;background:var(--surface);border-radius:18px;border:1px solid var(--line);box-shadow:0 30px 70px -24px rgba(16,37,26,.35);overflow:hidden;animation:rise .2s ease}
+.wiz-top{display:flex;align-items:center;gap:12px;padding:16px 22px}
+.wiz-top .mk{width:36px;height:36px;border-radius:10px;background:var(--emerald-soft);color:var(--emerald);display:grid;place-items:center}
+.wiz-top .mk svg{width:19px;height:19px}
+.wiz-top b{font-family:var(--f-display);font-weight:600;font-size:15px;flex:1}
+.wiz-prog{height:4px;background:var(--sunk);margin-inline:22px;border-radius:4px;overflow:hidden}
+.wiz-prog i{display:block;height:100%;background:var(--gold-grad);border-radius:4px;transition:width .3s ease}
+.wiz-b{flex:1;overflow:auto;padding:26px 28px 18px;display:grid;gap:16px;align-content:start;min-height:320px}
+.wiz-b>*{animation:qin .28s ease both}
+.wiz-b>*:nth-child(2){animation-delay:.03s}.wiz-b>*:nth-child(3){animation-delay:.06s}.wiz-b>*:nth-child(4){animation-delay:.09s}
+.wiz.back .wiz-b>*{animation-name:qback}
+@keyframes qin{from{opacity:0;transform:translateX(-14px)}}
+@keyframes qback{from{opacity:0;transform:translateX(14px)}}
+.wiz-step{font-size:12px;font-weight:600;color:var(--gold-deep);letter-spacing:.3px;display:flex;gap:8px;align-items:center}
+.wiz-step .opt-tag{color:var(--faint);font-weight:500}
+.wiz-q{margin:0;font-family:var(--f-display);font-size:27px;font-weight:600;line-height:1.35;text-wrap:balance}
+.wiz-hint{margin:-6px 0 0;color:var(--muted);font-size:14px}
+.big-in{width:100%;font-size:21px;padding:15px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+.big-in:focus{outline:none;border-color:var(--emerald-2);box-shadow:0 0 0 4px var(--emerald-soft);background:var(--surface)}
+textarea.big-in{min-height:120px;font-size:17px;resize:vertical}
+.in-wrap{position:relative}
+.in-wrap .suf{position:absolute;inset-inline-end:16px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:15px;pointer-events:none}
+.readout{font-size:14px;color:var(--muted);min-height:1.4em}
+.readout b{color:var(--gold-deep);font-family:var(--f-display);font-weight:600}
+.qchips{display:flex;flex-wrap:wrap;gap:8px}
+.qchip{padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:14px;color:var(--ink);transition:border-color .15s,background .15s}
+.qchip:hover{border-color:var(--gold)}
+.qchip[aria-pressed="true"]{background:var(--emerald);color:#fff;border-color:var(--emerald)}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.opt{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);cursor:pointer;text-align:right;transition:border-color .15s,background .15s,transform .1s}
+.opt:hover{border-color:var(--gold);transform:translateY(-1px)}
+.opt[aria-pressed="true"]{border-color:var(--emerald-2);background:var(--emerald-soft)}
+.opt .oi{width:38px;height:38px;border-radius:10px;background:var(--gold-soft);color:var(--gold-deep);display:grid;place-items:center;flex:none}
+.opt .oi svg{width:20px;height:20px}
+.opt[aria-pressed="true"] .oi{background:var(--emerald);color:#fff}
+.opt b{display:block;font-weight:600;font-size:15px}
+.opt small{display:block;color:var(--muted);font-size:12px;line-height:1.4}
+.opt .dot{width:12px;height:12px;border-radius:50%;flex:none}
+.pick-search{position:relative}
+.pick-search svg{position:absolute;inset-inline-start:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--faint)}
+.pick-search .big-in{padding-inline-start:44px;font-size:16px;padding-block:12px}
+.picklist{display:grid;gap:8px;max-height:min(46vh,340px);overflow:auto;padding:2px}
+.pitem{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer;text-align:right;width:100%}
+.pitem:hover{border-color:var(--gold)}
+.pitem[aria-pressed="true"]{border-color:var(--emerald-2);background:var(--emerald-soft)}
+.pitem .t{flex:1;min-width:0}
+.pitem .t b{display:block;font-weight:600}
+.pitem .t small{display:block;color:var(--muted);font-size:12px}
+.pick-empty{color:var(--muted);font-size:14px;padding:18px;text-align:center;border:1.5px dashed var(--line);border-radius:12px}
+.wiz-err{color:var(--bad);font-size:13px;min-height:1.2em;margin:0}
+.shake{animation:shake .3s ease}
+@keyframes shake{25%{transform:translateX(6px)}50%{transform:translateX(-6px)}75%{transform:translateX(3px)}}
+.wiz-f{display:flex;align-items:center;gap:8px;padding:14px 22px 18px;border-top:1px solid var(--line-2);background:var(--bg)}
+.wiz-f .sp{flex:1}
+.wiz-f .kbd{font-size:12px;color:var(--faint)}
+.btn.lg{padding:12px 22px;font-size:15px}
+.review{display:grid;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.rv{display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:1px solid var(--line-2);background:var(--surface)}
+.rv:first-child{border-top:0}
+.rv span{width:110px;flex:none;font-size:13px;color:var(--muted)}
+.rv div{flex:1;min-width:0;font-weight:600;overflow-wrap:anywhere}
+.rv div.empty-v{color:var(--faint);font-weight:400}
+.rv button{background:none;border:0;color:var(--emerald-2);font-size:13px;font-weight:600;cursor:pointer;padding:4px 6px;border-radius:6px}
+.rv button:hover{background:var(--emerald-soft)}
+.done-badge{width:52px;height:52px;border-radius:50%;background:var(--gold-grad);color:var(--gold-ink);display:grid;place-items:center}
+.done-badge svg{width:26px;height:26px}
+@media (max-width:760px){
+  .scrim.wizs{place-items:end stretch;padding:0}
+  .wiz{max-width:none;border-radius:20px 20px 0 0;max-height:94vh}
+  .wiz-b{padding:22px 18px 14px}
+  .wiz-q{font-size:23px}
+  .wiz-f{padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+  .wiz-f .kbd{display:none}
+  .opts{grid-template-columns:1fr 1fr}
+  .opt{padding:12px;gap:10px}
+  .opt .oi{width:34px;height:34px}
+  .rv span{width:88px}
+}
 </style>
 
 <div id="login">
   <section class="lbrand" aria-hidden="true">
-    <img src="logo-full.webp" alt="">
+    <img src="logo-mark.webp" alt="">
+    <div class="lword"><div class="wordmark"><span class="a">Alaa</span> <span class="d">Deals</span></div><div class="tagline">REAL ESTATE</div></div>
     <p class="pitch">كل عميل متسجّل، كل وحدة متابَعة،<br>و<b>كل صفقة</b> لحد ما تتقفل.</p>
+    <ul class="lfeat"><li><span>01</span>سجّل العميل في أقل من دقيقة</li><li><span>02</span>اربطه بالوحدة المناسبة</li><li><span>03</span>تابع الصفقة لحد التسليم</li></ul>
   </section>
   <section class="lform">
     <form class="login-card" id="loginForm" autocomplete="on">
@@ -630,57 +741,197 @@ function openClient(id){
    </div></aside>`,true);
 }
 
-/* ---------- forms ---------- */
-function specs(col,rec){
+/* ---------- question wizard ---------- */
+const QI={
+ key:sv('<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/>'),
+ apt:sv('<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 21v-3h4v3"/>'),
+ land:sv('<path d="M3 17l5-6 4 4 3-3 6 5"/><path d="M3 21h18M15 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>'),
+ villa:sv('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10M10 20v-5h4v5"/>'),
+ duplex:sv('<path d="M4 21V9l8-5 8 5v12"/><path d="M4 14h16M9 21v-4h6v4M9 10h1M14 10h1"/>'),
+ shop:sv('<path d="M4 9l1.5-5h13L20 9M4 9v11h16V9M4 9c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3s3-1.3 3-3c0 1.7 1.3 3 3 3"/><path d="M10 20v-5h4v5"/>'),
+ office:sv('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/>'),
+ fb:sv('<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/>'),
+ wa:sv('<path d="M4 20l1.3-4A8 8 0 1 1 8 18.7L4 20z"/><path d="M9 9.5c.3 2 2 3.8 4 4.5l1.2-1.2 2 .8v1.6c-3.7.4-7.7-3.4-7.4-7.2H10l.6 2-1.6.5z"/>'),
+ phone:sv('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>'),
+ users:I.clients, walk:sv('<path d="M3 21h18M6 21V9l6-4 6 4v12"/><path d="M10 21v-6h4v6"/>'), dots:sv('<circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/>'),
+ check:sv('<path d="M5 12l5 5 9-10"/>'), next:sv('<path d="M15 6l-6 6 6 6"/>'), prev:sv('<path d="M9 6l6 6-6 6"/>')
+};
+const typeIcon={'شقة':QI.apt,'أرض':QI.land,'فيلا':QI.villa,'دوبلكس':QI.duplex,'محل':QI.shop,'مكتب':QI.office};
+const srcIcon={'فيسبوك':QI.fb,'واتساب':QI.wa,'اتصال':QI.phone,'ترشيح':QI.users,'زيارة مكتب':QI.walk,'أخرى':QI.dots};
+const dotCol={'p-ok':'var(--ok)','p-warn':'var(--warn)','p-bad':'var(--bad)','p-info':'var(--info)','p-acc':'var(--emerald-2)','p-mute':'var(--faint)','p-gold':'var(--gold)'};
+const statusDot=v=>`<span class="dot" style="background:${dotCol[pillFor[v]]||'var(--faint)'}"></span>`;
+
+function steps(col,rec){
   if(col==='clients')return[
-    {k:'name',l:'اسم العميل',req:1},{k:'phone',l:'رقم الموبايل',t:'tel',req:1},
-    {k:'type',l:'نوع العميل',t:'select',o:CLIENT_TYPES},{k:'status',l:'الحالة',t:'select',o:CLIENT_STATUS},
-    {k:'source',l:'المصدر',t:'select',o:SOURCES},{k:'budget',l:'الميزانية (ج.م)',t:'number'},
-    {k:'want',l:'المطلوب (نوع، منطقة، مساحة)',full:1,ph:'مثال: شقة 150م في الحي التاني'},{k:'notes',l:'ملاحظات',t:'textarea',full:1}];
+    {k:'name',l:'الاسم',q:'اسم العميل إيه؟',t:'text',req:1,ph:'الاسم بالكامل'},
+    {k:'phone',l:'الموبايل',q:'رقم موبايله كام؟',t:'tel',req:1,ph:'01xxxxxxxxx',
+      check:v=>{const d=String(v.phone||'').replace(/\D/g,'');if(d.length<8)return 'الرقم ناقص، اكتبه كامل';if(S.clients.some(c=>c.id!==(rec&&rec.id)&&c.phone===v.phone))return 'الرقم ده متسجل لعميل تاني';return ''}},
+    {k:'type',l:'نوع العميل',q:'العميل ده عايز إيه؟',t:'choice',opts:[['مشتري','عايز يشتري وحدة',QI.key],['مالك/بائع','عنده وحدة عايز يبيعها',I.units],['مستثمر','بيدوّر على فرصة استثمار',I.coin]]},
+    {k:'want',l:'الطلب',q:v=>v.type==='مالك/بائع'?'عنده إيه للبيع؟':'بيدوّر على إيه بالظبط؟',hint:'نوع الوحدة، المنطقة، والمساحة',t:'text',opt:1,ph:v=>v.type==='مالك/بائع'?'مثال: شقة 180م دور تالت':'مثال: شقة 150م في الحي التاني'},
+    {k:'budget',l:'الميزانية',q:'ميزانيته في حدود كام؟',t:'money',opt:1,when:v=>v.type!=='مالك/بائع',chips:()=>[500000,1000000,1500000,2000000,3000000].map(n=>[n,money(n)])},
+    {k:'source',l:'المصدر',q:'العميل عرفك منين؟',t:'choice',opts:SOURCES.map(s=>[s,'',srcIcon[s]])},
+    {k:'status',l:'الحالة',q:'حالته دلوقتي إيه؟',t:'choice',opts:[['جديد','أول تواصل'],['متابعة','محتاج متابعة'],['مهتم جداً','قريب من القرار'],['غير مهتم','مش مهتم حالياً'],['تم التعامل','اشترى أو باع']].map(o=>[o[0],o[1],null,statusDot(o[0])])},
+    {k:'notes',l:'ملاحظات',q:'في ملاحظة تحب تسجلها؟',t:'textarea',opt:1,ph:'أي تفاصيل تفيدك في المتابعة'}];
   if(col==='units')return[
-    {k:'title',l:'اسم الوحدة / العنوان',req:1,full:1,ph:'مثال: شقة 3 غرف — عمارة 12'},
-    {k:'type',l:'النوع',t:'select',o:UNIT_TYPES},{k:'area',l:'المنطقة'},
-    {k:'size',l:'المساحة (م²)',t:'number'},{k:'floor',l:'الدور'},
-    {k:'price',l:'السعر (ج.م)',t:'number'},{k:'status',l:'الحالة',t:'select',o:UNIT_STATUS},
-    {k:'ownerId',l:'المالك',t:'select',o:[['','— بدون —'],...S.clients.filter(c=>c.type!=='مشتري').map(c=>[c.id,c.name])],full:1},
-    {k:'notes',l:'ملاحظات',t:'textarea',full:1}];
-  const units=S.units.filter(u=>u.status==='متاحة'||(rec&&u.id===rec.unitId));
+    {k:'type',l:'النوع',q:'نوع الوحدة إيه؟',t:'choice',opts:UNIT_TYPES.map(t=>[t,'',typeIcon[t]])},
+    {k:'title',l:'الاسم',q:'سمّي الوحدة باسم يفكّرك بيها',hint:'هيظهر في القوايم والصفقات',t:'text',req:1,ph:v=>v.type==='أرض'?'مثال: أرض 300م بيت الوطن':'مثال: '+(v.type||'شقة')+' 3 غرف — عمارة 12'},
+    {k:'area',l:'المنطقة',q:'في أنهي منطقة؟',t:'text',opt:1,ph:'اسم المنطقة أو الحي',chips:()=>[...new Set(S.units.map(u=>u.area).filter(Boolean))].slice(0,8).map(a=>[a,a])},
+    {k:'size',l:'المساحة',q:'مساحتها كام متر؟',t:'num',suf:'م²',opt:1},
+    {k:'floor',l:'الدور',q:'في الدور الكام؟',t:'text',opt:1,when:v=>['شقة','دوبلكس','مكتب','محل'].includes(v.type),chips:()=>['أرضي','1','2','3','4','5','6','روف'].map(x=>[x,x])},
+    {k:'price',l:'السعر',q:'سعرها المطلوب كام؟',t:'money',opt:1,extra:v=>v.size&&v.price?`سعر المتر: <b>${fmt(Math.round(v.price/v.size))}</b> ج.م`:''},
+    {k:'ownerId',l:'المالك',q:'مين صاحب الوحدة؟',hint:'من العملاء المسجلين كملاك أو مستثمرين',t:'pick',opt:1,
+      items:()=>S.clients.filter(c=>c.type!=='مشتري').map(c=>({id:c.id,title:c.name,sub:c.phone,tag:c.type})),empty:'مفيش ملاك مسجلين لسه — تقدر تتخطى السؤال ده'},
+    {k:'status',l:'الحالة',q:'الوحدة متاحة؟',t:'choice',opts:[['متاحة','جاهزة للعرض'],['محجوزة','عليها عربون'],['مباعة','اتباعت خلاص']].map(o=>[o[0],o[1],null,statusDot(o[0])])},
+    {k:'notes',l:'ملاحظات',q:'في تفاصيل تانية؟',t:'textarea',opt:1,ph:'التشطيب، الاتجاه، طريقة الدفع…'}];
   return[
-    {k:'clientId',l:'العميل',t:'select',req:1,o:[['','اختر عميل'],...S.clients.map(c=>[c.id,c.name+(c.phone?' — '+c.phone:'')])],full:1},
-    {k:'unitId',l:'الوحدة',t:'select',req:1,o:[['','اختر وحدة متاحة'],...units.map(u=>[u.id,u.title+(u.price?' — '+money(u.price)+' ج.م':'')])],full:1},
-    {k:'stage',l:'المرحلة',t:'select',o:STAGES},{k:'date',l:'التاريخ',t:'date'},
-    {k:'value',l:'قيمة الصفقة (ج.م)',t:'number'},{k:'commission',l:'العمولة (ج.م)',t:'number'},
-    {k:'notes',l:'ملاحظات',t:'textarea',full:1}];
+    {k:'clientId',l:'العميل',q:'الصفقة دي مع مين؟',t:'pick',req:1,items:()=>S.clients.map(c=>({id:c.id,title:c.name,sub:c.phone,tag:c.type})),empty:'سجّل عميل الأول'},
+    {k:'unitId',l:'الوحدة',q:'على أنهي وحدة؟',hint:'الوحدات المتاحة بس',t:'pick',req:1,
+      items:()=>S.units.filter(u=>u.status==='متاحة'||(rec&&u.id===rec.unitId)).map(u=>({id:u.id,title:u.title,sub:[u.area,u.size?fmt(u.size)+' م²':'',u.price?money(u.price)+' ج.م':''].filter(Boolean).join(' · '),tag:u.type})),
+      empty:'مفيش وحدات متاحة دلوقتي',onPick:(v,id)=>{const u=S.units.find(x=>x.id===id);if(u&&u.price&&!v.value)v.value=u.price}},
+    {k:'stage',l:'المرحلة',q:'وصلتوا لفين؟',t:'choice',opts:[['تواصل أول','لسه بادئين'],['معاينة','شاف أو هيشوف الوحدة'],['تفاوض','بتتفقوا على السعر'],['عربون','دفع عربون'],['تم البيع','الصفقة اتقفلت'],['ملغاة','الصفقة وقفت']].map(o=>[o[0],o[1],null,statusDot(o[0])])},
+    {k:'value',l:'القيمة',q:'قيمة الصفقة كام؟',hint:v=>v.unitId&&S.units.find(u=>u.id===v.unitId)?.price?'سعر الوحدة متحط تلقائياً، عدّله لو اتفقتوا على سعر تاني':'',t:'money',opt:1},
+    {k:'commission',l:'العمولة',q:'عمولتك كام؟',t:'money',opt:1,chips:v=>v.value?[1,1.5,2,2.5].map(p=>[Math.round(v.value*p/100),p+'%']):[]},
+    {k:'date',l:'التاريخ',q:'تاريخ الصفقة؟',t:'date',chips:()=>{const d=new Date();const y=new Date(d-864e5);return[[today(),'النهارده'],[y.toISOString().slice(0,10),'امبارح']]}},
+    {k:'notes',l:'ملاحظات',q:'في ملاحظة على الصفقة؟',t:'textarea',opt:1,ph:'موعد المعاينة، شروط الدفع…'}];
 }
 const TITLES={clients:['عميل جديد','تعديل العميل'],units:['وحدة جديدة','تعديل الوحدة'],deals:['صفقة جديدة','تعديل الصفقة']};
+let W=null;
+const fx=(x,v)=>typeof x==='function'?x(v):x;
 function openForm(col,id,pre){
   const rec=id?S[col].find(x=>x.id===id):null;
   if(col==='deals'&&!rec&&(!S.clients.length||!S.units.some(u=>u.status==='متاحة'))){toast(!S.clients.length?'سجّل عميل الأول':'مفيش وحدات متاحة — أضف وحدة الأول');return}
   const def={clients:{type:'مشتري',status:'جديد',source:'فيسبوك'},units:{type:'شقة',status:'متاحة'},deals:{stage:'تواصل أول',date:today()}}[col];
-  const v={...def,...(pre||{}),...(rec||{})};
-  const fields=specs(col,rec).map(f=>{
-    const fid='f_'+f.k;const val=v[f.k]??'';let ctl;
-    if(f.t==='select')ctl=`<select class="in" id="${fid}" name="${f.k}" ${f.req?'required':''}>${f.o.map(o=>{const[ov,ol]=Array.isArray(o)?o:[o,o];return `<option value="${esc(ov)}" ${String(ov)===String(val)?'selected':''}>${esc(ol)}</option>`}).join('')}</select>`;
-    else if(f.t==='textarea')ctl=`<textarea class="in" id="${fid}" name="${f.k}">${esc(val)}</textarea>`;
-    else ctl=`<input class="in ${f.t==='number'||f.t==='tel'?'num':''}" id="${fid}" name="${f.k}" type="${f.t||'text'}" ${f.t==='number'?'min="0" step="any" inputmode="decimal"':''} ${f.ph?`placeholder="${esc(f.ph)}"`:''} value="${esc(val)}" ${f.req?'required':''}>`;
-    return `<label class="f ${f.full?'full':''}">${f.l}${ctl}</label>`;
-  }).join('');
-  showModal(`<form class="modal" id="mform" role="dialog" aria-modal="true"><div class="modal-h"><span class="mk">${I[col]}</span><h3>${TITLES[col][rec?1:0]}</h3><button class="icon-btn" type="button" data-act="close" title="إغلاق">${I.x}</button></div>
-   <div class="modal-b"><div class="fgrid">${fields}</div></div>
-   <div class="modal-f"><button class="btn" type="submit">${rec?'حفظ التعديل':'إضافة'}</button><button class="btn ghost" type="button" data-act="close">إلغاء</button></div></form>`);
-  $('#mform').addEventListener('submit',async e=>{
-    e.preventDefault();
-    const fd=new FormData(e.target);const o={...(rec||{})};
-    for(const[k,val]of fd.entries())o[k]=typeof val==='string'?val.trim():val;
-    ['budget','size','price','value','commission'].forEach(k=>{if(k in o)o[k]=o[k]===''?'':Number(o[k])});
-    if(!o.id){o.id=uid();o.createdAt=new Date().toISOString()}
-    if(col==='deals'&&o.stage==='تم البيع'&&!o.closedAt)o.closedAt=o.date||today();
-    if(col==='clients'&&o.phone&&S.clients.some(c=>c.id!==o.id&&c.phone===o.phone)){toast('الرقم ده متسجل لعميل تاني');return}
-    closeModal();await save(col,o);if(col==='deals')await syncUnit(o);
-    toast(rec?'تم حفظ التعديل':'تمت الإضافة');
-  });
-  setTimeout(()=>{const f=$('#mform .in');f&&f.focus()},40);
+  W={col,rec,v:{...def,...(pre||{}),...(rec||{})},i:0,review:!!rec,dir:1,q:''};
+  if(pre&&pre.clientId&&col==='deals')W.i=1;
+  showModal('<div class="wiz" id="wiz" role="dialog" aria-modal="true"></div>',false,'wizs');
+  drawWiz();
 }
+const vis=()=>steps(W.col,W.rec).filter(s=>!s.when||s.when(W.v));
+function showVal(s,v){
+  const x=v[s.k];
+  if(x===''||x==null)return null;
+  if(s.t==='money')return egp(x);
+  if(s.t==='num')return `<span class="num">${fmt(x)}</span> ${s.suf||''}`;
+  if(s.t==='pick'){const it=(s.items()||[]).find(i=>i.id===x)||(s.k==='clientId'||s.k==='ownerId'?{title:cName(x)}:{title:uName(x)});return esc(it.title)}
+  if(s.t==='choice')return pill(x)||esc(x);
+  return `<span style="white-space:pre-wrap">${esc(x)}</span>`;
+}
+function drawWiz(){
+  const el=$('#wiz');if(!el)return;
+  const st=vis();
+  el.classList.toggle('back',W.dir<0);
+  const head=`<div class="wiz-top"><span class="mk">${I[W.col]}</span><b>${TITLES[W.col][W.rec?1:0]}</b><button class="icon-btn" type="button" data-act="close" title="إغلاق">${I.x}</button></div>`;
+  if(W.review){
+    el.innerHTML=head+`<div class="wiz-prog"><i style="width:100%"></i></div>
+     <div class="wiz-b"><div class="wiz-step">${W.rec?'راجع وعدّل اللي محتاجه':'كله تمام؟'}</div><h3 class="wiz-q">${W.rec?'بيانات '+esc(W.v.name||W.v.title||cName(W.v.clientId)):'راجع البيانات قبل الحفظ'}</h3>
+     <div class="review">${st.map((s,i)=>{const sv=showVal(s,W.v);return `<div class="rv"><span>${s.l}</span><div class="${sv?'':'empty-v'}">${sv||'—'}</div><button type="button" data-w="goto" data-i="${i}">تعديل</button></div>`}).join('')}</div></div>
+     <div class="wiz-f">${W.rec?'':`<button class="btn ghost" type="button" data-w="prev">${QI.prev}رجوع</button>`}<span class="sp"></span><button class="btn gold lg" type="button" data-w="save">${QI.check}${W.rec?'حفظ التعديلات':'حفظ'}</button></div>`;
+    return;
+  }
+  if(W.i>=st.length)W.i=st.length-1;
+  const s=st[W.i],v=W.v,val=v[s.k]??'';
+  let ctl='';
+  const chips=s.chips?fx(s.chips,v):[];
+  const chipH=chips.length?`<div class="qchips">${chips.map(([cv,cl])=>`<button type="button" class="qchip" data-w="chip" data-v="${esc(cv)}" aria-pressed="${String(cv)===String(val)}">${esc(cl)}</button>`).join('')}</div>`:'';
+  if(s.t==='choice'){
+    ctl=`<div class="opts">${s.opts.map(([ov,od,oi,dot])=>`<button type="button" class="opt" data-w="pick" data-v="${esc(ov)}" aria-pressed="${ov===val}">${oi?`<span class="oi">${oi}</span>`:(dot||'')}<span><b>${esc(ov)}</b>${od?`<small>${esc(od)}</small>`:''}</span></button>`).join('')}</div>`;
+  }else if(s.t==='pick'){
+    const items=s.items();
+    ctl=items.length?`${items.length>5?`<div class="pick-search">${I.search}<input class="big-in" id="wq" type="search" placeholder="ابحث…" value="${esc(W.q)}" autocomplete="off"></div>`:''}<div class="picklist" id="wpl"></div>`:`<div class="pick-empty">${esc(s.empty||'لا يوجد')}</div>`;
+  }else if(s.t==='textarea'){
+    ctl=`<textarea class="big-in" id="wi" placeholder="${esc(fx(s.ph,v)||'')}">${esc(val)}</textarea>`;
+  }else if(s.t==='date'){
+    ctl=`<input class="big-in num" id="wi" type="date" value="${esc(val)}">`+chipH;
+  }else{
+    const numeric=s.t==='money'||s.t==='num';
+    const shown=numeric&&val!==''?fmt(val):val;
+    ctl=`<div class="in-wrap"><input class="big-in ${numeric||s.t==='tel'?'num':''}" id="wi" type="${s.t==='tel'?'tel':'text'}" ${numeric||s.t==='tel'?'inputmode="numeric"':''} placeholder="${esc(fx(s.ph,v)||(s.t==='money'?'0':''))}" value="${esc(shown)}" autocomplete="off">${s.t==='money'?'<span class="suf">ج.م</span>':s.suf?`<span class="suf">${s.suf}</span>`:''}</div>${numeric?'<div class="readout" id="wro"></div>':''}${chipH}`;
+  }
+  const last=W.i===st.length-1;
+  el.innerHTML=head+`<div class="wiz-prog"><i style="width:${(W.i)/st.length*100}%"></i></div>
+   <div class="wiz-b"><div class="wiz-step">سؤال ${W.i+1} من ${st.length}${s.opt?'<span class="opt-tag">· اختياري</span>':''}</div>
+   <h3 class="wiz-q">${esc(fx(s.q,v))}</h3>${s.hint&&fx(s.hint,v)?`<p class="wiz-hint">${esc(fx(s.hint,v))}</p>`:''}
+   ${ctl}<p class="wiz-err" id="werr"></p></div>
+   <div class="wiz-f">${W.i>0?`<button class="btn ghost" type="button" data-w="prev">${QI.prev}رجوع</button>`:''}<span class="sp"></span>
+   ${s.opt&&(val===''||val==null)&&s.t!=='choice'?`<button class="btn ghost" type="button" data-w="skip">تخطّي</button>`:''}
+   ${s.t==='choice'?'':`<span class="kbd">Enter ↵</span>`}
+   <button class="btn lg" type="button" data-w="next">${W.backTo?'تم':last?'مراجعة':'التالي'}${QI.next}</button></div>`;
+  if(s.t==='pick')drawPick();
+  updReadout();
+  const fi=$('#wq')||$('#wi');if(fi&&matchMedia('(pointer:fine)').matches)setTimeout(()=>{fi.focus();if(fi.setSelectionRange&&fi.type==='text')fi.setSelectionRange(fi.value.length,fi.value.length)},60);
+}
+function drawPick(){
+  const s=vis()[W.i];const pl=$('#wpl');if(!pl)return;
+  const q=W.q.trim().toLowerCase();
+  const items=s.items().filter(i=>!q||[i.title,i.sub,i.tag].join(' ').toLowerCase().includes(q));
+  pl.innerHTML=items.length?items.map(i=>`<button type="button" class="pitem" data-w="pickid" data-v="${i.id}" aria-pressed="${W.v[s.k]===i.id}"><span class="ini">${ini(i.title)}</span><span class="t"><b>${esc(i.title)}</b>${i.sub?`<small class="num" style="direction:rtl">${esc(i.sub)}</small>`:''}</span>${i.tag?pill(i.tag):''}</button>`).join(''):'<div class="pick-empty">مفيش نتايج</div>';
+}
+function updReadout(){
+  const ro=$('#wro');if(!ro)return;
+  const s=vis()[W.i];const v=W.v[s.k];
+  let h='';
+  if(v!==''&&v!=null&&s.t==='money')h=`<b>${money(v)}</b> جنيه`;
+  const ex=s.extra?s.extra(W.v):'';
+  ro.innerHTML=[h,ex].filter(Boolean).join(' · ');
+}
+function readInput(){
+  const s=vis()[W.i];const el=$('#wi');if(!el)return;
+  let x=el.value;
+  if(s.t==='money'||s.t==='num'){const d=x.replace(/[^\d.٠-٩]/g,'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c));W.v[s.k]=d===''?'':Number(d)}
+  else if(s.t==='tel')W.v[s.k]=x.replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[^\d+]/g,'');
+  else W.v[s.k]=x.trim();
+}
+function wErr(m){const e=$('#werr');if(e)e.textContent=m;const b=$('#wiz .wiz-b');if(b){b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake')}}
+function wNext(){
+  readInput();
+  const st=vis(),s=st[W.i],v=W.v[s.k];
+  if(s.req&&(v===''||v==null)){wErr(s.t==='pick'?'اختار من القايمة':'السؤال ده مطلوب');return}
+  if(s.check){const m=s.check(W.v);if(m){wErr(m);return}}
+  W.dir=1;W.q='';
+  if(W.backTo){W.backTo=false;W.review=true;drawWiz();return}
+  if(W.i>=vis().length-1){W.review=true}else W.i++;
+  drawWiz();
+}
+function wPrev(){readInput();W.dir=-1;W.q='';if(W.review){W.review=false;W.i=vis().length-1}else if(W.i>0)W.i--;drawWiz()}
+async function wSave(){
+  const col=W.col,rec=W.rec;const o={...W.v};
+  if(!o.id){o.id=uid();o.createdAt=new Date().toISOString()}
+  if(col==='deals'&&o.stage==='تم البيع'&&!o.closedAt)o.closedAt=o.date||today();
+  for(const s of steps(col,rec)){if(s.when&&!s.when(o))o[s.k]=''}
+  const missing=vis().find(s=>s.req&&(o[s.k]===''||o[s.k]==null));
+  if(missing){W.review=false;W.i=vis().indexOf(missing);drawWiz();wErr('السؤال ده مطلوب');return}
+  const btn=$('[data-w="save"]');if(btn)btn.disabled=true;
+  closeModal();W=null;await save(col,o);if(col==='deals')await syncUnit(o);
+  toast(rec?'تم حفظ التعديلات':{clients:'العميل اتسجّل',units:'الوحدة اتضافت',deals:'الصفقة اتسجّلت'}[col]);
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-w]');if(!b||!W)return;
+  const a=b.dataset.w,s=W.review?null:vis()[W.i];
+  if(a==='next')wNext();
+  else if(a==='prev')wPrev();
+  else if(a==='skip'){W.v[s.k]='';W.dir=1;if(W.backTo){W.backTo=false;W.review=true}else if(W.i>=vis().length-1)W.review=true;else W.i++;drawWiz()}
+  else if(a==='save')wSave();
+  else if(a==='goto'){W.review=false;W.i=+b.dataset.i;W.backTo=true;W.dir=-1;drawWiz()}
+  else if(a==='pick'){W.v[s.k]=b.dataset.v;document.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x===b));setTimeout(wNext,170)}
+  else if(a==='pickid'){W.v[s.k]=b.dataset.v;s.onPick&&s.onPick(W.v,b.dataset.v);document.querySelectorAll('.pitem').forEach(x=>x.setAttribute('aria-pressed',x===b));setTimeout(wNext,170)}
+  else if(a==='chip'){const n=(s.t==='money'||s.t==='num')?Number(b.dataset.v):b.dataset.v;W.v[s.k]=n;const i=$('#wi');if(i)i.value=(s.t==='money'||s.t==='num')?fmt(n):n;document.querySelectorAll('.qchip').forEach(x=>x.setAttribute('aria-pressed',x===b));updReadout();if(s.t!=='money'&&s.t!=='num')setTimeout(wNext,170)}
+});
+document.addEventListener('input',e=>{
+  if(!W)return;
+  if(e.target.id==='wq'){W.q=e.target.value;drawPick()}
+  else if(e.target.id==='wi'){readInput();const s=vis()[W.i];
+    if(s.t==='money'||s.t==='num'){const v=W.v[s.k];const pos=e.target.value.length;e.target.value=v===''?'':fmt(v);updReadout()}
+    $('#werr')&&($('#werr').textContent='');document.querySelectorAll('.qchip').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===String(W.v[s.k])))}
+});
+document.addEventListener('keydown',e=>{
+  if(!W||e.key!=='Enter')return;
+  const t=e.target;
+  if(t.tagName==='TEXTAREA'&&!(e.ctrlKey||e.metaKey))return;
+  if(t.closest&&t.closest('button'))return;
+  e.preventDefault();
+  if(W.review)wSave();else wNext();
+});
+
 function confirmDel(col,id){
   const rec=S[col].find(x=>x.id===id);if(!rec)return;
   const name=rec.name||rec.title||cName(rec.clientId);
@@ -708,8 +959,8 @@ function openSettings(){
     closeModal();toast('تم تغيير كلمة السر');
   });
 }
-function showModal(h,side){$('#layer').innerHTML=`<div class="scrim${side?' side':''}" id="scrim">${h}</div>`;$('#scrim').addEventListener('mousedown',e=>{if(e.target.id==='scrim')closeModal()})}
-function closeModal(){$('#layer').innerHTML=''}
+function showModal(h,side,cls){$('#layer').innerHTML=`<div class="scrim${side?' side':''}${cls?' '+cls:''}" id="scrim">${h}</div>`;$('#scrim').addEventListener('mousedown',e=>{if(e.target.id==='scrim')closeModal()})}
+function closeModal(){$('#layer').innerHTML='';W=null}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
 initStore();
