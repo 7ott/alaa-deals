@@ -3,10 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#04271A">
+<meta name="theme-color" content="#F7F5EF">
 <title>Alaa Deals</title>
-<link rel="icon" type="image/webp" href="logo-mark.webp">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Alaa Deals">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <script src="config.js"></script>
 </head>
 <body>
@@ -254,7 +260,7 @@ select.stage{border:1px solid var(--line);border-radius:999px;padding:5px 12px;f
   .mhead .icon-btn{color:var(--rail-muted)}
   .mhead .icon-btn:hover{background:rgba(255,255,255,.06);color:#fff}
   .topbar h2{font-size:22px}
-  .tabbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:40}
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:40}
   .tabbar button{background:transparent;border:0;padding:9px 4px 10px;display:grid;justify-items:center;gap:3px;font-size:11px;color:var(--muted);cursor:pointer;position:relative}
   .tabbar button svg{width:21px;height:21px}
   .tabbar button[aria-current="page"]{color:var(--emerald-2);font-weight:600}
@@ -397,6 +403,38 @@ textarea.big-in{min-height:120px;font-size:17px;resize:vertical}
   .opt .oi{width:34px;height:34px}
   .rv span{width:88px}
 }
+
+/* ---------- stars, brokers, downloads ---------- */
+.stars{display:inline-flex;gap:1px;vertical-align:middle;direction:ltr}
+.stars i,.stars button{width:15px;height:15px;color:var(--line);display:inline-grid;place-items:center;font-style:normal}
+.stars i svg,.stars button svg{width:100%;height:100%}
+.stars .on{color:var(--gold)}
+.stars.big{gap:6px}
+.stars.big button{width:30px;height:30px;background:none;border:0;padding:0;cursor:pointer;transition:transform .12s,color .12s}
+.stars.big button:hover{transform:scale(1.15)}
+.pick-stars{justify-content:flex-start;padding:6px 0}
+.pick-stars button{width:46px!important;height:46px!important}
+.stars.big button:not(.on):hover,.pick-stars button:not(.on):hover{color:var(--gold-soft)}
+.rate-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.dl-sum{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line-2);border-radius:12px;overflow:hidden;background:var(--line-2);gap:1px}
+.dl-sum div{background:var(--bg);padding:12px;display:grid;justify-items:center;gap:2px}
+.dl-sum b{font-family:var(--f-display);font-size:22px;font-weight:600;color:var(--emerald)}
+.dl-sum span{font-size:12px;color:var(--muted)}
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dl-card{display:flex;align-items:flex-start;gap:12px;padding:16px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);cursor:pointer;text-align:right;transition:border-color .15s,transform .1s}
+.dl-card:hover{border-color:var(--gold);transform:translateY(-1px)}
+.dl-card .oi{width:40px;height:40px;border-radius:10px;background:var(--gold-grad);color:var(--gold-ink);display:grid;place-items:center;flex:none}
+.dl-card .oi svg{width:20px;height:20px}
+.dl-card b{display:block;font-weight:600;font-size:15px}
+.dl-card small{display:block;color:var(--muted);font-size:12px;line-height:1.5;margin-top:2px}
+.dl-label{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:8px}
+.qchip svg{display:inline-block}
+.dl-restore{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px dashed var(--line);border-radius:14px;background:var(--bg)}
+.dl-restore>div{flex:1;min-width:0}
+.dl-restore b{display:block;font-weight:600;font-size:14px}
+.dl-restore small{display:block;color:var(--muted);font-size:12px}
+.dl-restore.install{border-style:solid;border-color:#E6D3A2;background:var(--gold-soft)}
+@media (max-width:760px){.dl-grid{grid-template-columns:1fr}.dl-sum b{font-size:18px}.tabbar button{font-size:10.5px}}
 </style>
 
 <div id="login">
@@ -431,6 +469,7 @@ textarea.big-in{min-height:120px;font-size:17px;resize:vertical}
     <nav class="nav" id="nav"></nav>
     <div class="rail-foot">
       <div class="who"><div class="avatar" id="av"></div><div><b id="whoName"></b><span>متصل</span></div></div>
+      <button type="button" data-act="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M4 20h16"/></svg>تحميل البيانات</button>
       <button type="button" data-act="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>تغيير كلمة السر</button>
       <button type="button" data-act="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></svg>تسجيل الخروج</button>
     </div>
@@ -460,12 +499,20 @@ const I={
  board:sv('<rect x="3" y="3" width="5" height="18" rx="1.5"/><rect x="10" y="3" width="5" height="12" rx="1.5"/><rect x="17" y="3" width="4" height="8" rx="1.5"/>'),
  x:sv('<path d="M6 6l12 12M18 6L6 18"/>'),
  gear:sv('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/>'),
- out:sv('<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>')
+ out:sv('<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>'),
+ brokers:sv('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18M11 12h2v3h-2z"/>'),
+ download:sv('<path d="M12 4v11M7 10l5 5 5-5M4 20h16"/>'),
+ upload:sv('<path d="M12 16V5M7 10l5-5 5 5M4 20h16"/>'),
+ sheet:sv('<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/>'),
+ file:sv('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>'),
+ device:sv('<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>'),
+ star:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.8l2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4L2.8 9.5l6.4-.8z"/></svg>'
 };
 /* ---------- vocab ---------- */
 const CLIENT_TYPES=['مشتري','مالك/بائع','مستثمر'];
 const CLIENT_STATUS=['جديد','متابعة','مهتم جداً','غير مهتم','تم التعامل'];
-const SOURCES=['فيسبوك','واتساب','اتصال','ترشيح','زيارة مكتب','أخرى'];
+const SOURCES=['فيسبوك','واتساب','اتصال','ترشيح','مكتب/سمسار','زيارة مكتب','أخرى'];
+const BROKER_KINDS=['مكتب عقاري','سمسار حر'];
 const UNIT_TYPES=['شقة','أرض','فيلا','دوبلكس','محل','مكتب'];
 const UNIT_STATUS=['متاحة','محجوزة','مباعة'];
 const STAGES=['تواصل أول','معاينة','تفاوض','عربون','تم البيع','ملغاة'];
@@ -474,7 +521,8 @@ const pillFor={
  'جديد':'p-info','متابعة':'p-warn','مهتم جداً':'p-ok','غير مهتم':'p-mute','تم التعامل':'p-acc',
  'متاحة':'p-ok','محجوزة':'p-warn','مباعة':'p-mute',
  'تواصل أول':'p-info','معاينة':'p-info','تفاوض':'p-warn','عربون':'p-gold','تم البيع':'p-ok','ملغاة':'p-bad',
- 'مشتري':'p-acc','مالك/بائع':'p-gold','مستثمر':'p-info'
+ 'مشتري':'p-acc','مالك/بائع':'p-gold','مستثمر':'p-info',
+ 'مكتب عقاري':'p-acc','سمسار حر':'p-gold'
 };
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -483,9 +531,11 @@ const fmt=n=>(Number(n)||0).toLocaleString('en-US');
 const money=n=>{n=Number(n)||0;if(n>=1e6){return (Math.round(n/1e4)/100).toString()+' مليون'}return fmt(n)};
 const moneyH=n=>{n=Number(n)||0;return n>=1e6?`<span class="num">${Math.round(n/1e4)/100}</span> مليون`:`<span class="num">${fmt(n)}</span>`};
 const egp=n=>`<span class="money">${moneyH(n)}</span><span class="cur">ج.م</span>`;
-const today=()=>new Date().toISOString().slice(0,10);
+const isoLocal=d=>{const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())};
+const today=()=>isoLocal(new Date());
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const pill=v=>v?`<span class="pill ${pillFor[v]||'p-mute'}">${esc(v)}</span>`:'';
+const stars=(n,big)=>{n=Math.round(Number(n)||0);return `<span class="stars${big?' big':''}" aria-label="${n} من 5">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}">${I.star}</i>`).join('')}</span>`};
 const ini=n=>esc((String(n||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join(' ')));
 const ss={get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},del(k){try{sessionStorage.removeItem(k)}catch(e){}}};
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -498,10 +548,10 @@ const dateAr=()=>{try{return new Date().toLocaleDateString('ar-EG',{weekday:'lon
 
 /* ---------- store (Supabase) ---------- */
 const CFG=window.ALAA_DEALS_CONFIG||{};
-const S={clients:[],units:[],deals:[]};
+const S={clients:[],units:[],deals:[],brokers:[]};
 let sb=null; const mode='cloud';
-const TABLES=['clients','units','deals'];
-const NUMS=['budget','size','price','value','commission'];
+const TABLES=['brokers','clients','units','deals'];
+const NUMS=['budget','size','price','value','commission','rating','split','brokerShare'];
 const DATES=['date','closedAt'];
 const snake=k=>k.replace(/[A-Z]/g,m=>'_'+m.toLowerCase());
 const camel=k=>k.replace(/_([a-z])/g,(_,c)=>c.toUpperCase());
@@ -530,6 +580,12 @@ async function remove(col,id){
   const {error}=await sb.from(col).delete().eq('id',id);
   if(error){handleErr(error);return}
   S[col]=S[col].filter(x=>x.id!==id);render();
+}
+async function bulkSave(col,arr){
+  for(let i=0;i<arr.length;i+=400){
+    const {error}=await sb.from(col).upsert(arr.slice(i,i+400).map(toRow));
+    if(error)throw error;
+  }
 }
 function handleErr(e){console.error(e);toast(e&&e.code==='42501'?'مش مسموح بالحفظ، سجّل دخولك تاني':'تعذّر الحفظ، حاول مرة أخرى')}
 const toEmail=u=>u.includes('@')?u.trim().toLowerCase():u.trim().toLowerCase().replace(/\s+/g,'')+'@'+(CFG.usernameDomain||'alaadeals.app');
@@ -562,14 +618,14 @@ $('#loginForm').addEventListener('submit',async e=>{
 });
 async function enterApp(u){user=nameOf(u);$('#login').hidden=true;$('#app').hidden=false;$('#lp').value='';render();await loadAll();subscribe()}
 function showLogin(){closeModal();$('#app').hidden=true;$('#login').hidden=false}
-async function logout(){if(sb)await sb.auth.signOut();user='';S.clients=[];S.units=[];S.deals=[];showLogin()}
+async function logout(){if(sb)await sb.auth.signOut();user='';S.clients=[];S.units=[];S.deals=[];S.brokers=[];showLogin()}
 
 /* ---------- navigation ---------- */
-const VIEWS=[['dash','الرئيسية'],['clients','العملاء'],['units','الوحدات'],['deals','الصفقات']];
+const VIEWS=[['dash','الرئيسية'],['clients','العملاء'],['units','الوحدات'],['deals','الصفقات'],['brokers','المكاتب']];
 let view='dash';
-const ui={q:{clients:'',units:'',deals:''},f:{clients:'الكل',units:'الكل',deals:'المفتوحة'},dealsMode:ls.get('ad_dmode')||'board'};
+const ui={q:{clients:'',units:'',deals:'',brokers:''},f:{clients:'الكل',units:'الكل',deals:'المفتوحة',brokers:'الكل'},dealsMode:ls.get('ad_dmode')||'board'};
 function renderNav(){
-  const counts={clients:S.clients.length,units:S.units.filter(u=>u.status==='متاحة').length,deals:S.deals.filter(d=>OPEN_STAGES.includes(d.stage)).length};
+  const counts={clients:S.clients.length,units:S.units.filter(u=>u.status==='متاحة').length,deals:S.deals.filter(d=>OPEN_STAGES.includes(d.stage)).length,brokers:S.brokers.length};
   $('#nav').innerHTML=VIEWS.map(([k,l])=>`<button type="button" data-view="${k}" ${view===k?'aria-current="page"':''}>${I[k]}<span>${l}</span>${counts[k]!=null?`<span class="count num">${counts[k]}</span>`:''}</button>`).join('');
   $('#tabbar').innerHTML=VIEWS.map(([k,l])=>`<button type="button" data-view="${k}" ${view===k?'aria-current="page"':''}>${I[k]}<span>${l}</span></button>`).join('');
   $('#whoName').textContent=user||'';$('#av').textContent=(user||'?').trim().charAt(0).toUpperCase();
@@ -587,6 +643,15 @@ document.addEventListener('click',e=>{
   else if(act==='close')closeModal();
   else if(act==='goto'){view=a.dataset.v;render()}
   else if(act==='client')openClient(id);
+  else if(act==='broker')openBroker(id);
+  else if(act==='rate'){const b=S.brokers.find(x=>x.id===id);if(b){const nb={...b,rating:+a.dataset.v};save('brokers',nb).then(()=>{openBroker(id);toast('تم حفظ التقييم')})}}
+  else if(act==='export')exportSection(a.dataset.col);
+  else if(act==='data')openData();
+  else if(act==='xall')exportAll();
+  else if(act==='json')exportJSON();
+  else if(act==='restore')$('#restoreIn')&&$('#restoreIn').click();
+  else if(act==='doRestore')doRestore();
+  else if(act==='install')installApp();
   else if(act==='dmode'){ui.dealsMode=a.dataset.v;ls.set('ad_dmode',ui.dealsMode);render()}
   else if(act==='copy'){const t=a.dataset.t;const ok=()=>toast('تم نسخ الرقم');
     try{navigator.clipboard.writeText(t).then(ok,()=>toast(t))}catch(err){toast(t)}}
@@ -608,6 +673,8 @@ async function syncUnit(d){
 }
 const cName=id=>{const c=S.clients.find(x=>x.id===id);return c?c.name:'عميل محذوف'};
 const uName=id=>{const u=S.units.find(x=>x.id===id);return u?u.title:'وحدة محذوفة'};
+const bName=id=>{const b=S.brokers.find(x=>x.id===id);return b?b.name:''};
+const bLink=(id,st)=>{const n=bName(id);return n?`<button class="namebtn" type="button" data-act="broker" data-id="${id}" style="font-weight:${st||500}">${esc(n)}</button>`:''};
 const sum=(a,k)=>a.reduce((s,x)=>s+(Number(x[k])||0),0);
 
 /* ---------- render ---------- */
@@ -615,16 +682,16 @@ function render(){
   if($('#app').hidden)return;
   renderNav();
   const m=$('#main');
-  const mh=`<div class="mhead"><img src="${MARK}" alt=""><div class="wordmark"><span class="a">Alaa</span> <span class="d">Deals</span></div><span class="sp"></span><button class="icon-btn" type="button" title="الإعدادات" data-act="settings">${I.gear}</button><button class="icon-btn" type="button" title="خروج" data-act="logout">${I.out}</button></div>`;
+  const mh=`<div class="mhead"><img src="${MARK}" alt=""><div class="wordmark"><span class="a">Alaa</span> <span class="d">Deals</span></div><span class="sp"></span><button class="icon-btn" type="button" title="تحميل البيانات" data-act="data">${I.download}</button><button class="icon-btn" type="button" title="الإعدادات" data-act="settings">${I.gear}</button><button class="icon-btn" type="button" title="خروج" data-act="logout">${I.out}</button></div>`;
   const banner=false?'<div class="banner">وضع محلي: البيانات محفوظة على هذا المتصفح فقط. افتح السيستم من رابطه على Claude عشان الحفظ السحابي.</div>':'';
   if(view==='dash'){m.innerHTML=mh+banner+renderDash();return}
-  const meta={clients:['العملاء','عميل جديد'],units:['الوحدات','وحدة جديدة'],deals:['الصفقات','صفقة جديدة']}[view];
-  const ph={clients:'ابحث بالاسم أو رقم الموبايل',units:'ابحث بالعنوان أو المنطقة',deals:'ابحث بالعميل أو الوحدة'}[view];
-  const sub={clients:`${S.clients.length} عميل مسجّل`,units:`${S.units.filter(u=>u.status==='متاحة').length} متاحة من ${S.units.length}`,deals:`${S.deals.filter(d=>OPEN_STAGES.includes(d.stage)).length} صفقة مفتوحة`}[view];
+  const meta={clients:['العملاء','عميل جديد'],units:['الوحدات','وحدة جديدة'],deals:['الصفقات','صفقة جديدة'],brokers:['المكاتب والسماسرة','مكتب أو سمسار']}[view];
+  const ph={clients:'ابحث بالاسم أو رقم الموبايل',units:'ابحث بالعنوان أو المنطقة',deals:'ابحث بالعميل أو الوحدة أو المكتب',brokers:'ابحث بالاسم أو الموبايل أو المنطقة'}[view];
+  const sub={clients:`${S.clients.length} عميل مسجّل`,units:`${S.units.filter(u=>u.status==='متاحة').length} متاحة من ${S.units.length}`,deals:`${S.deals.filter(d=>OPEN_STAGES.includes(d.stage)).length} صفقة مفتوحة`,brokers:`${S.brokers.filter(b=>b.kind==='مكتب عقاري').length} مكتب · ${S.brokers.filter(b=>b.kind==='سمسار حر').length} سمسار`}[view];
   const toggle=view==='deals'?`<div class="seg" role="group" aria-label="طريقة العرض"><button type="button" data-act="dmode" data-v="board" aria-pressed="${ui.dealsMode==='board'}">${I.board.replace('<svg','<svg width="15" height="15" style="vertical-align:-3px"')} لوحة</button><button type="button" data-act="dmode" data-v="list" aria-pressed="${ui.dealsMode==='list'}">${I.list.replace('<svg','<svg width="15" height="15" style="vertical-align:-3px"')} قائمة</button></div>`:'';
   m.innerHTML=mh+banner+`
    <header class="topbar"><div class="t"><span class="date">${esc(sub)}</span><h2>${meta[0]}</h2></div><span class="sp"></span>
-    <div class="actions">${toggle}<button class="btn gold" type="button" data-act="add" data-col="${view}">${I.plus}${meta[1]}</button></div></header>
+    <div class="actions">${toggle}<button class="btn ghost" type="button" data-act="export" data-col="${view}" title="تحميل اللي ظاهر قدامك كملف Excel">${I.download}Excel</button><button class="btn gold" type="button" data-act="add" data-col="${view}">${I.plus}${meta[1]}</button></div></header>
    <div class="toolbar"><div class="search">${I.search}<input class="in" id="search" type="search" placeholder="${ph}" value="${esc(ui.q[view])}" aria-label="بحث"></div><span class="sp"></span><div id="chips"></div></div>
    <div id="list"></div>`;
   renderList();
@@ -632,6 +699,7 @@ function render(){
 function chipsFor(){
   if(view==='clients')return['الكل',...CLIENT_TYPES].map(c=>[c,c==='الكل'?S.clients.length:S.clients.filter(x=>x.type===c).length]);
   if(view==='units')return['الكل',...UNIT_STATUS].map(c=>[c,c==='الكل'?S.units.length:S.units.filter(x=>x.status===c).length]);
+  if(view==='brokers')return['الكل',...BROKER_KINDS].map(c=>[c,c==='الكل'?S.brokers.length:S.brokers.filter(x=>x.kind===c).length]);
   const opts=ui.dealsMode==='board'?['المفتوحة','الكل']:['المفتوحة','الكل','تم البيع','ملغاة'];
   return opts.map(c=>[c,c==='الكل'?S.deals.length:c==='المفتوحة'?S.deals.filter(d=>OPEN_STAGES.includes(d.stage)).length:S.deals.filter(d=>d.stage===c).length]);
 }
@@ -644,24 +712,24 @@ function renderList(){
   const act=(col,id)=>`<td class="act"><button class="icon-btn" type="button" title="تعديل" data-act="edit" data-col="${col}" data-id="${id}">${I.edit}</button><button class="icon-btn del" type="button" title="حذف" data-act="del" data-col="${col}" data-id="${id}">${I.del}</button></td>`;
   let rows,html;
   if(view==='clients'){
-    rows=S.clients.filter(c=>(f==='الكل'||c.type===f)&&(!q||[c.name,c.phone,c.want,c.notes].join(' ').toLowerCase().includes(q))).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+    rows=S.clients.filter(c=>(f==='الكل'||c.type===f)&&(!q||[c.name,c.phone,c.want,c.notes,bName(c.brokerId)].join(' ').toLowerCase().includes(q))).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
     html=rows.length?`<div class="tbl-wrap"><table><thead><tr><th>العميل</th><th>النوع</th><th>الحالة</th><th>المصدر</th><th>الميزانية</th><th>المطلوب</th><th>صفقات</th><th></th></tr></thead><tbody>${rows.map(c=>{
       const dc=S.deals.filter(d=>d.clientId===c.id).length;
       return `<tr><td class="first"><div class="cell-person"><span class="ini">${ini(c.name)}</span><div><button class="namebtn" type="button" data-act="client" data-id="${c.id}">${esc(c.name)}</button><div class="sm num">${esc(c.phone)}</div></div></div></td>
-      <td data-l="النوع">${pill(c.type)}</td><td data-l="الحالة">${pill(c.status)}</td><td data-l="المصدر">${esc(c.source||'—')}</td>
+      <td data-l="النوع">${pill(c.type)}</td><td data-l="الحالة">${pill(c.status)}</td><td data-l="المصدر">${c.source==='مكتب/سمسار'&&bName(c.brokerId)?bLink(c.brokerId):esc(c.source||'—')}</td>
       <td data-l="الميزانية">${c.budget?egp(c.budget):'—'}</td><td data-l="المطلوب"><span class="sm">${esc(c.want||'—')}</span></td>
       <td data-l="صفقات" class="num">${dc}</td>${act('clients',c.id)}</tr>`}).join('')}</tbody></table></div>`:emptyState('clients');
   }else if(view==='units'){
-    rows=S.units.filter(u=>(f==='الكل'||u.status===f)&&(!q||[u.title,u.area,u.type,u.notes,u.ownerId?cName(u.ownerId):''].join(' ').toLowerCase().includes(q))).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+    rows=S.units.filter(u=>(f==='الكل'||u.status===f)&&(!q||[u.title,u.area,u.type,u.notes,u.ownerId?cName(u.ownerId):'',bName(u.brokerId)].join(' ').toLowerCase().includes(q))).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
     html=rows.length?`<div class="tbl-wrap"><table><thead><tr><th>الوحدة</th><th>النوع</th><th>المساحة</th><th>السعر</th><th>سعر المتر</th><th>المالك</th><th>الحالة</th><th></th></tr></thead><tbody>${rows.map(u=>`
-      <tr><td class="first"><div class="main" style="font-weight:600">${esc(u.title)}</div><div class="sm">${esc(u.area||'')}${u.floor?' · الدور '+esc(u.floor):''}</div></td>
+      <tr><td class="first"><div class="main" style="font-weight:600">${esc(u.title)}</div><div class="sm">${esc(u.area||'')}${u.floor?' · الدور '+esc(u.floor):''}${bName(u.brokerId)?' · عن طريق '+esc(bName(u.brokerId)):''}</div></td>
       <td data-l="النوع">${esc(u.type||'—')}</td><td data-l="المساحة" class="num">${u.size?fmt(u.size)+' م²':'—'}</td>
       <td data-l="السعر">${u.price?egp(u.price):'—'}</td>
       <td data-l="سعر المتر"><span class="sm num">${u.price&&u.size?fmt(Math.round(u.price/u.size)):'—'}</span></td>
       <td data-l="المالك">${u.ownerId&&S.clients.find(c=>c.id===u.ownerId)?`<button class="namebtn" type="button" data-act="client" data-id="${u.ownerId}" style="font-weight:500">${esc(cName(u.ownerId))}</button>`:'—'}</td>
       <td data-l="الحالة">${pill(u.status)}</td>${act('units',u.id)}</tr>`).join('')}</tbody></table></div>`:emptyState('units');
   }else{
-    const match=d=>!q||[cName(d.clientId),uName(d.unitId),d.notes].join(' ').toLowerCase().includes(q);
+    const match=d=>!q||[cName(d.clientId),uName(d.unitId),d.notes,bName(d.brokerId)].join(' ').toLowerCase().includes(q);
     if(ui.dealsMode==='board'){
       const stages=f==='المفتوحة'?OPEN_STAGES:STAGES;
       rows=S.deals.filter(d=>stages.includes(d.stage)&&match(d));
@@ -669,23 +737,34 @@ function renderList(){
         const ds=rows.filter(d=>d.stage===s).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
         return `<section class="col"><div class="col-h">${pill(s)}<span class="c num">${ds.length}</span><span class="sum">${ds.length?moneyH(sum(ds,'value')):''}</span></div>
         ${ds.map(d=>`<article class="dcard"><div class="row"><button class="namebtn who2" type="button" data-act="client" data-id="${d.clientId}">${esc(cName(d.clientId))}</button><button class="icon-btn" type="button" title="تعديل" data-act="edit" data-col="deals" data-id="${d.id}">${I.edit}</button></div>
-          <div class="u">${esc(uName(d.unitId))}</div>
+          <div class="u">${esc(uName(d.unitId))}${bName(d.brokerId)?`<br><span style="color:var(--gold-deep)">مع ${esc(bName(d.brokerId))}</span>`:''}</div>
           <div class="row"><span>${d.value?egp(d.value):'<span class="sm">بدون قيمة</span>'}</span><span class="sm num">${esc(d.date||'')}</span></div>
           <select class="stage" data-id="${d.id}" aria-label="مرحلة الصفقة">${STAGES.map(x=>`<option ${x===d.stage?'selected':''}>${x}</option>`).join('')}</select></article>`).join('')||'<div class="sm" style="color:var(--faint);text-align:center;padding:14px 0">لا يوجد</div>'}</section>`}).join('')}</div></div>`:emptyState('deals');
     }else{
       rows=S.deals.filter(d=>(f==='الكل'||(f==='المفتوحة'?OPEN_STAGES.includes(d.stage):d.stage===f))&&match(d)).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-      html=rows.length?`<div class="tbl-wrap"><table><thead><tr><th>العميل / الوحدة</th><th>المرحلة</th><th>قيمة الصفقة</th><th>العمولة</th><th>التاريخ</th><th></th></tr></thead><tbody>${rows.map(d=>`
+      html=rows.length?`<div class="tbl-wrap"><table><thead><tr><th>العميل / الوحدة</th><th>المرحلة</th><th>قيمة الصفقة</th><th>العمولة</th><th>مكتب شريك</th><th>التاريخ</th><th></th></tr></thead><tbody>${rows.map(d=>`
         <tr><td class="first"><div class="cell-person"><span class="ini">${ini(cName(d.clientId))}</span><div><button class="namebtn" type="button" data-act="client" data-id="${d.clientId}">${esc(cName(d.clientId))}</button><div class="sm">${esc(uName(d.unitId))}</div></div></div></td>
         <td data-l="المرحلة"><select class="stage" data-id="${d.id}" aria-label="مرحلة الصفقة">${STAGES.map(s=>`<option ${s===d.stage?'selected':''}>${s}</option>`).join('')}</select></td>
-        <td data-l="القيمة">${d.value?egp(d.value):'—'}</td><td data-l="العمولة">${d.commission?egp(d.commission):'—'}</td>
+        <td data-l="القيمة">${d.value?egp(d.value):'—'}</td><td data-l="العمولة">${d.commission?egp(d.commission):'—'}</td><td data-l="مكتب شريك">${bName(d.brokerId)?`${bLink(d.brokerId)}${d.brokerShare?`<div class="sm">نصيبه ${money(d.brokerShare)}</div>`:''}`:'—'}</td>
         <td data-l="التاريخ" class="num">${esc(d.date||'')}</td>${act('deals',d.id)}</tr>`).join('')}</tbody></table></div>`:emptyState('deals');
     }
   }
+  if(view==='brokers'){
+    rows=S.brokers.filter(b=>(f==='الكل'||b.kind===f)&&(!q||[b.name,b.contact,b.phone,b.area,b.notes].join(' ').toLowerCase().includes(q))).sort((a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0)||(b.createdAt||'').localeCompare(a.createdAt||''));
+    html=rows.length?`<div class="tbl-wrap"><table><thead><tr><th>المكتب / السمسار</th><th>النوع</th><th>المنطقة</th><th>التقييم</th><th>القسمة</th><th>وحدات</th><th>صفقات</th><th>عملاء</th><th></th></tr></thead><tbody>${rows.map(b=>{
+      const nu=S.units.filter(u=>u.brokerId===b.id).length,nd=S.deals.filter(d=>d.brokerId===b.id).length,nc=S.clients.filter(c=>c.brokerId===b.id).length;
+      return `<tr><td class="first"><div class="cell-person"><span class="ini" style="background:var(--gold-soft);color:var(--gold-deep)">${ini(b.name)}</span><div><button class="namebtn" type="button" data-act="broker" data-id="${b.id}">${esc(b.name)}</button><div class="sm"><span class="num">${esc(b.phone||'')}</span>${b.contact?' · '+esc(b.contact):''}</div></div></div></td>
+      <td data-l="النوع">${pill(b.kind)}</td><td data-l="المنطقة">${esc(b.area||'—')}</td><td data-l="التقييم">${b.rating?stars(b.rating):'<span class="sm">—</span>'}</td>
+      <td data-l="القسمة"><span class="num">${b.split!==''&&b.split!=null?b.split+'%':'—'}</span></td>
+      <td data-l="وحدات" class="num">${nu}</td><td data-l="صفقات" class="num">${nd}</td><td data-l="عملاء" class="num">${nc}</td>${act('brokers',b.id)}</tr>`}).join('')}</tbody></table></div>`:emptyState('brokers');
+  }
+  lastRows=rows||[];
   el.innerHTML=html;
 }
+let lastRows=[];
 function emptyState(col){
   const anyData=S[col].length>0;
-  const t={clients:['لسه مفيش عملاء','سجّل أول عميل بالاسم ورقم الموبايل.','عميل جديد'],units:['لسه مفيش وحدات','أضف أول وحدة بالسعر والمساحة.','وحدة جديدة'],deals:['لسه مفيش صفقات','اربط عميل بوحدة وابدأ أول صفقة.','صفقة جديدة']}[col];
+  const t={clients:['لسه مفيش عملاء','سجّل أول عميل بالاسم ورقم الموبايل.','عميل جديد'],units:['لسه مفيش وحدات','أضف أول وحدة بالسعر والمساحة.','وحدة جديدة'],deals:['لسه مفيش صفقات','اربط عميل بوحدة وابدأ أول صفقة.','صفقة جديدة'],brokers:['لسه مفيش مكاتب','سجّل المكاتب والسماسرة اللي بتتعامل معاهم واربطهم بالوحدات والصفقات.','مكتب أو سمسار']}[col];
   if(anyData)return `<div class="panel"><div class="empty">${I.search}مفيش نتائج تطابق البحث أو الفلتر.</div></div>`;
   return `<div class="panel"><div class="empty">${I[col]}<div><b style="color:var(--ink);font-family:var(--f-display)">${t[0]}</b><br>${t[1]}</div><button class="btn gold sm" type="button" data-act="add" data-col="${col}">${I.plus}${t[2]}</button></div></div>`;
 }
@@ -702,6 +781,7 @@ function renderDash(){
     return `<div class="pipe-row"><span>${pill(s)}</span><div class="bar"><i style="width:${ds.length/max*100}%;${s==='ملغاة'?'background:var(--bad)':s==='تم البيع'?'background:var(--gold)':''}"></i></div><span class="n"><span class="num">${ds.length}</span> · ${moneyH(sum(ds,'value'))}</span></div>`}).join('');
   const recent=[...S.clients].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).slice(0,6);
   const hot=[...open].sort((a,b)=>STAGES.indexOf(b.stage)-STAGES.indexOf(a.stage)||(b.value||0)-(a.value||0)).slice(0,6);
+  const topB=S.brokers.map(b=>[b,S.deals.filter(d=>d.brokerId===b.id).length]).sort((a,b)=>b[1]-a[1]||(Number(b[0].rating)||0)-(Number(a[0].rating)||0)).slice(0,6);
   const hr=new Date().getHours();
   return `
   <header class="topbar"><div class="t"><span class="date">${esc(dateAr())}</span><h2>${hr<12?'صباح الخير':'مساء الخير'} يا ${esc(user||'')}</h2></div><span class="sp"></span>
@@ -709,7 +789,7 @@ function renderDash(){
    <button class="btn ghost" type="button" data-act="add" data-col="units">${I.plus}وحدة</button>
    <button class="btn gold" type="button" data-act="add" data-col="deals">${I.plus}صفقة جديدة</button></div></header>
   <div class="kpis">
-   <div class="kpi hero"><div class="top"><span class="l">عمولة الشهر</span><span class="ic">${I.coin}</span></div><span class="v">${moneyH(sum(wonM,'commission'))}<small>ج.م</small></span><span class="s">${wonM.length} صفقة اتقفلت · مبيعات ${money(sum(wonM,'value'))} ج.م</span></div>
+   <div class="kpi hero"><div class="top"><span class="l">عمولة الشهر</span><span class="ic">${I.coin}</span></div><span class="v">${moneyH(sum(wonM,'commission'))}<small>ج.م</small></span><span class="s">${wonM.length} صفقة اتقفلت${sum(wonM,'brokerShare')?` · الصافي بعد المكاتب ${money(sum(wonM,'commission')-sum(wonM,'brokerShare'))}`:` · مبيعات ${money(sum(wonM,'value'))}`} ج.م</span></div>
    <div class="kpi"><div class="top"><span class="l">صفقات مفتوحة</span><span class="ic">${I.deals}</span></div><span class="v num">${open.length}</span><span class="s">قيمتها ${money(sum(open,'value'))} ج.م</span></div>
    <div class="kpi"><div class="top"><span class="l">العملاء</span><span class="ic">${I.clients}</span></div><span class="v num">${S.clients.length}</span><span class="s">${follow} محتاج متابعة</span></div>
    <div class="kpi"><div class="top"><span class="l">وحدات متاحة</span><span class="ic">${I.units}</span></div><span class="v num">${avail}<small>/ ${S.units.length}</small></span><span class="s">نسبة الإغلاق ${conv}%</span></div>
@@ -718,7 +798,9 @@ function renderDash(){
    <section class="panel"><div class="panel-h"><h3>مراحل الصفقات</h3><span class="sp"></span><button class="link" type="button" data-act="goto" data-v="deals">فتح اللوحة</button></div>${S.deals.length?`<div class="pipe">${pipe}</div>`:`<div class="empty">${I.deals}ابدأ أول صفقة وهتظهر مراحلها هنا.</div>`}</section>
    <section class="panel"><div class="panel-h"><h3>صفقات قربت تتقفل</h3><span class="sp"></span><button class="link" type="button" data-act="goto" data-v="deals">الكل</button></div>${hot.length?`<div class="feed">${hot.map(d=>`<div class="feed-item"><span class="ini">${ini(cName(d.clientId))}</span><span class="t"><button class="namebtn" type="button" data-act="client" data-id="${d.clientId}">${esc(cName(d.clientId))}</button><small>${esc(uName(d.unitId))}</small></span>${pill(d.stage)}</div>`).join('')}</div>`:`<div class="empty">${I.deals}مفيش صفقات مفتوحة دلوقتي.</div>`}</section>
   </div>
-  <section class="panel"><div class="panel-h"><h3>آخر العملاء المسجلين</h3><span class="sp"></span><button class="link" type="button" data-act="goto" data-v="clients">كل العملاء</button></div>${recent.length?`<div class="feed">${recent.map(c=>`<div class="feed-item"><span class="ini">${ini(c.name)}</span><span class="t"><button class="namebtn" type="button" data-act="client" data-id="${c.id}">${esc(c.name)}</button><small class="num">${esc(c.phone||'')}${c.want?' · '+esc(c.want):''}</small></span>${pill(c.type)}${pill(c.status)}</div>`).join('')}</div>`:`<div class="empty">${I.clients}سجّل أول عميل من زر «عميل».</div>`}</section>`;
+  <div class="grid2">  <section class="panel"><div class="panel-h"><h3>آخر العملاء المسجلين</h3><span class="sp"></span><button class="link" type="button" data-act="goto" data-v="clients">كل العملاء</button></div>${recent.length?`<div class="feed">${recent.map(c=>`<div class="feed-item"><span class="ini">${ini(c.name)}</span><span class="t"><button class="namebtn" type="button" data-act="client" data-id="${c.id}">${esc(c.name)}</button><small class="num">${esc(c.phone||'')}${c.want?' · '+esc(c.want):''}</small></span>${pill(c.type)}${pill(c.status)}</div>`).join('')}</div>`:`<div class="empty">${I.clients}سجّل أول عميل من زر «عميل».</div>`}</section>
+  <section class="panel"><div class="panel-h"><h3>المكاتب الشريكة</h3><span class="sp"></span><button class="link" type="button" data-act="goto" data-v="brokers">كل المكاتب</button></div>${topB.length?`<div class="feed">${topB.map(([b,n])=>`<div class="feed-item"><span class="ini" style="background:var(--gold-soft);color:var(--gold-deep)">${ini(b.name)}</span><span class="t"><button class="namebtn" type="button" data-act="broker" data-id="${b.id}">${esc(b.name)}</button><small>${n} صفقة${b.area?' · '+esc(b.area):''}</small></span>${b.rating?stars(b.rating):pill(b.kind)}</div>`).join('')}</div>`:`<div class="empty">${I.brokers}سجّل المكاتب والسماسرة اللي بتشتغل معاهم.<button class="btn ghost sm" type="button" data-act="add" data-col="brokers">${I.plus}مكتب أو سمسار</button></div>`}</section>
+  </div>`;
 }
 
 /* ---------- client drawer ---------- */
@@ -732,12 +814,37 @@ function openClient(id){
     <h3>${esc(c.name)}</h3>
     <div class="ph"><span class="num">${esc(c.phone||'')}</span>${c.phone?`<button class="copy" type="button" data-act="copy" data-t="${esc(c.phone)}">نسخ</button>`:''}</div></div>
    <div class="dr-b">
-    <div class="facts"><div><span>الميزانية</span><b>${c.budget?egp(c.budget):'—'}</b></div><div><span>المصدر</span><b>${esc(c.source||'—')}</b></div>
+    <div class="facts"><div><span>الميزانية</span><b>${c.budget?egp(c.budget):'—'}</b></div><div><span>المصدر</span><b>${c.source==='مكتب/سمسار'&&bName(c.brokerId)?bLink(c.brokerId,600):esc(c.source||'—')}</b></div>
      <div class="full"><span>المطلوب</span><b>${esc(c.want||'—')}</b></div>${c.notes?`<div class="full"><span>ملاحظات</span><b style="font-weight:400;white-space:pre-wrap">${esc(c.notes)}</b></div>`:''}</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn gold sm" type="button" data-act="add" data-col="deals" data-pre='${esc(JSON.stringify({clientId:id}))}'>${I.plus}صفقة لهذا العميل</button><button class="btn ghost sm" type="button" data-act="edit" data-col="clients" data-id="${id}">${I.edit}تعديل البيانات</button></div>
     <section class="panel" style="box-shadow:none;padding:16px"><div class="panel-h"><h3>صفقاته</h3><span class="sp"></span><span class="sm num" style="color:var(--muted)">${ds.length}</span></div>
      ${ds.length?`<div class="feed">${ds.map(d=>`<div class="feed-item"><span class="t">${esc(uName(d.unitId))}<small class="num">${esc(d.date||'')}${d.value?' · '+money(d.value)+' ج.م':''}</small></span>${pill(d.stage)}</div>`).join('')}</div>`:'<div class="sm" style="color:var(--muted)">مفيش صفقات لسه.</div>'}</section>
     ${owned.length?`<section class="panel" style="box-shadow:none;padding:16px"><h3>وحدات يملكها</h3><div class="feed">${owned.map(u=>`<div class="feed-item"><span class="t">${esc(u.title)}<small>${u.price?money(u.price)+' ج.م':''}</small></span>${pill(u.status)}</div>`).join('')}</div></section>`:''}
+   </div></aside>`,true);
+}
+
+/* ---------- broker drawer ---------- */
+function openBroker(id){
+  const b=S.brokers.find(x=>x.id===id);if(!b){toast('المكتب ده اتحذف');return}
+  const ds=S.deals.filter(d=>d.brokerId===id).sort((a,c)=>(c.date||'').localeCompare(a.date||''));
+  const us=S.units.filter(u=>u.brokerId===id),cs=S.clients.filter(c=>c.brokerId===id);
+  const won=ds.filter(d=>d.stage==='تم البيع');
+  showModal(`<aside class="drawer" role="dialog" aria-modal="true" aria-label="ملف المكتب">
+   <div class="dr-h"><button class="icon-btn x" type="button" data-act="close" title="إغلاق">${I.x}</button>
+    <div style="display:flex;gap:8px">${pill(b.kind)}</div>
+    <h3>${esc(b.name)}</h3>
+    ${b.contact?`<div style="color:var(--muted);font-size:14px">المسؤول: ${esc(b.contact)}</div>`:''}
+    <div class="ph"><span class="num">${esc(b.phone||'')}</span>${b.phone?`<button class="copy" type="button" data-act="copy" data-t="${esc(b.phone)}">نسخ</button>`:''}</div>
+    <div class="rate-row"><span>تقييمك:</span><span class="stars big">${[1,2,3,4,5].map(i=>`<button type="button" class="${i<=(Number(b.rating)||0)?'on':''}" data-act="rate" data-id="${id}" data-v="${i}" title="${i} من 5">${I.star}</button>`).join('')}</span></div></div>
+   <div class="dr-b">
+    <div class="facts"><div><span>المنطقة</span><b>${esc(b.area||'—')}</b></div><div><span>قسمة العمولة</span><b class="num">${b.split!==''&&b.split!=null?b.split+'%':'—'}</b></div>
+     <div><span>صفقات مقفولة</span><b><span class="num">${won.length}</span> من <span class="num">${ds.length}</span></b></div><div><span>إجمالي نصيبه</span><b>${sum(won,'brokerShare')?egp(sum(won,'brokerShare')):'—'}</b></div>
+     ${b.notes?`<div class="full"><span>ملاحظات</span><b style="font-weight:400;white-space:pre-wrap">${esc(b.notes)}</b></div>`:''}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn gold sm" type="button" data-act="add" data-col="deals" data-pre='${esc(JSON.stringify({brokerId:id}))}'>${I.plus}صفقة مع ${b.kind==='سمسار حر'?'السمسار':'المكتب'} ده</button><button class="btn ghost sm" type="button" data-act="add" data-col="units" data-pre='${esc(JSON.stringify({brokerId:id}))}'>${I.plus}وحدة من عنده</button><button class="btn ghost sm" type="button" data-act="edit" data-col="brokers" data-id="${id}">${I.edit}تعديل</button></div>
+    <section class="panel" style="box-shadow:none;padding:16px"><div class="panel-h"><h3>صفقات مشتركة</h3><span class="sp"></span><span class="sm num" style="color:var(--muted)">${ds.length}</span></div>
+     ${ds.length?`<div class="feed">${ds.map(d=>`<div class="feed-item"><span class="t">${esc(cName(d.clientId))} — ${esc(uName(d.unitId))}<small class="num">${esc(d.date||'')}${d.brokerShare?' · نصيبه '+money(d.brokerShare)+' ج.م':''}</small></span>${pill(d.stage)}</div>`).join('')}</div>`:'<div class="sm" style="color:var(--muted)">مفيش صفقات مشتركة لسه.</div>'}</section>
+    ${us.length?`<section class="panel" style="box-shadow:none;padding:16px"><h3>وحدات جات عن طريقه</h3><div class="feed">${us.map(u=>`<div class="feed-item"><span class="t">${esc(u.title)}<small>${u.price?money(u.price)+' ج.م':''}</small></span>${pill(u.status)}</div>`).join('')}</div></section>`:''}
+    ${cs.length?`<section class="panel" style="box-shadow:none;padding:16px"><h3>عملاء جابهم</h3><div class="feed">${cs.map(c=>`<div class="feed-item"><span class="t"><button class="namebtn" type="button" data-act="client" data-id="${c.id}">${esc(c.name)}</button><small class="num">${esc(c.phone||'')}</small></span>${pill(c.status)}</div>`).join('')}</div></section>`:''}
    </div></aside>`,true);
 }
 
@@ -757,7 +864,7 @@ const QI={
  check:sv('<path d="M5 12l5 5 9-10"/>'), next:sv('<path d="M15 6l-6 6 6 6"/>'), prev:sv('<path d="M9 6l6 6-6 6"/>')
 };
 const typeIcon={'شقة':QI.apt,'أرض':QI.land,'فيلا':QI.villa,'دوبلكس':QI.duplex,'محل':QI.shop,'مكتب':QI.office};
-const srcIcon={'فيسبوك':QI.fb,'واتساب':QI.wa,'اتصال':QI.phone,'ترشيح':QI.users,'زيارة مكتب':QI.walk,'أخرى':QI.dots};
+const srcIcon={'مكتب/سمسار':I.brokers,'فيسبوك':QI.fb,'واتساب':QI.wa,'اتصال':QI.phone,'ترشيح':QI.users,'زيارة مكتب':QI.walk,'أخرى':QI.dots};
 const dotCol={'p-ok':'var(--ok)','p-warn':'var(--warn)','p-bad':'var(--bad)','p-info':'var(--info)','p-acc':'var(--emerald-2)','p-mute':'var(--faint)','p-gold':'var(--gold)'};
 const statusDot=v=>`<span class="dot" style="background:${dotCol[pillFor[v]]||'var(--faint)'}"></span>`;
 
@@ -770,6 +877,7 @@ function steps(col,rec){
     {k:'want',l:'الطلب',q:v=>v.type==='مالك/بائع'?'عنده إيه للبيع؟':'بيدوّر على إيه بالظبط؟',hint:'نوع الوحدة، المنطقة، والمساحة',t:'text',opt:1,ph:v=>v.type==='مالك/بائع'?'مثال: شقة 180م دور تالت':'مثال: شقة 150م في الحي التاني'},
     {k:'budget',l:'الميزانية',q:'ميزانيته في حدود كام؟',t:'money',opt:1,when:v=>v.type!=='مالك/بائع',chips:()=>[500000,1000000,1500000,2000000,3000000].map(n=>[n,money(n)])},
     {k:'source',l:'المصدر',q:'العميل عرفك منين؟',t:'choice',opts:SOURCES.map(s=>[s,'',srcIcon[s]])},
+    {k:'brokerId',l:'المكتب',q:'أنهي مكتب أو سمسار جابه؟',t:'pick',opt:1,when:v=>v.source==='مكتب/سمسار',items:()=>S.brokers.map(b=>({id:b.id,title:b.name,sub:[b.phone,b.area].filter(Boolean).join(' · '),tag:b.kind})),empty:'مفيش مكاتب مسجلة لسه — سجّلها من خانة المكاتب'},
     {k:'status',l:'الحالة',q:'حالته دلوقتي إيه؟',t:'choice',opts:[['جديد','أول تواصل'],['متابعة','محتاج متابعة'],['مهتم جداً','قريب من القرار'],['غير مهتم','مش مهتم حالياً'],['تم التعامل','اشترى أو باع']].map(o=>[o[0],o[1],null,statusDot(o[0])])},
     {k:'notes',l:'ملاحظات',q:'في ملاحظة تحب تسجلها؟',t:'textarea',opt:1,ph:'أي تفاصيل تفيدك في المتابعة'}];
   if(col==='units')return[
@@ -781,9 +889,10 @@ function steps(col,rec){
     {k:'price',l:'السعر',q:'سعرها المطلوب كام؟',t:'money',opt:1,extra:v=>v.size&&v.price?`سعر المتر: <b>${fmt(Math.round(v.price/v.size))}</b> ج.م`:''},
     {k:'ownerId',l:'المالك',q:'مين صاحب الوحدة؟',hint:'من العملاء المسجلين كملاك أو مستثمرين',t:'pick',opt:1,
       items:()=>S.clients.filter(c=>c.type!=='مشتري').map(c=>({id:c.id,title:c.name,sub:c.phone,tag:c.type})),empty:'مفيش ملاك مسجلين لسه — تقدر تتخطى السؤال ده'},
+    {k:'brokerId',l:'عن طريق',q:'الوحدة جاتلك عن طريق مكتب أو سمسار؟',hint:'لو جاتلك من المالك مباشرة اختار «بدون»',t:'pick',opt:1,items:()=>S.brokers.map(b=>({id:b.id,title:b.name,sub:[b.phone,b.area].filter(Boolean).join(' · '),tag:b.kind})),empty:'مفيش مكاتب مسجلة — تقدر تتخطى السؤال ده'},
     {k:'status',l:'الحالة',q:'الوحدة متاحة؟',t:'choice',opts:[['متاحة','جاهزة للعرض'],['محجوزة','عليها عربون'],['مباعة','اتباعت خلاص']].map(o=>[o[0],o[1],null,statusDot(o[0])])},
     {k:'notes',l:'ملاحظات',q:'في تفاصيل تانية؟',t:'textarea',opt:1,ph:'التشطيب، الاتجاه، طريقة الدفع…'}];
-  return[
+  if(col==='deals')return[
     {k:'clientId',l:'العميل',q:'الصفقة دي مع مين؟',t:'pick',req:1,items:()=>S.clients.map(c=>({id:c.id,title:c.name,sub:c.phone,tag:c.type})),empty:'سجّل عميل الأول'},
     {k:'unitId',l:'الوحدة',q:'على أنهي وحدة؟',hint:'الوحدات المتاحة بس',t:'pick',req:1,
       items:()=>S.units.filter(u=>u.status==='متاحة'||(rec&&u.id===rec.unitId)).map(u=>({id:u.id,title:u.title,sub:[u.area,u.size?fmt(u.size)+' م²':'',u.price?money(u.price)+' ج.م':''].filter(Boolean).join(' · '),tag:u.type})),
@@ -791,16 +900,30 @@ function steps(col,rec){
     {k:'stage',l:'المرحلة',q:'وصلتوا لفين؟',t:'choice',opts:[['تواصل أول','لسه بادئين'],['معاينة','شاف أو هيشوف الوحدة'],['تفاوض','بتتفقوا على السعر'],['عربون','دفع عربون'],['تم البيع','الصفقة اتقفلت'],['ملغاة','الصفقة وقفت']].map(o=>[o[0],o[1],null,statusDot(o[0])])},
     {k:'value',l:'القيمة',q:'قيمة الصفقة كام؟',hint:v=>v.unitId&&S.units.find(u=>u.id===v.unitId)?.price?'سعر الوحدة متحط تلقائياً، عدّله لو اتفقتوا على سعر تاني':'',t:'money',opt:1},
     {k:'commission',l:'العمولة',q:'عمولتك كام؟',t:'money',opt:1,chips:v=>v.value?[1,1.5,2,2.5].map(p=>[Math.round(v.value*p/100),p+'%']):[]},
-    {k:'date',l:'التاريخ',q:'تاريخ الصفقة؟',t:'date',chips:()=>{const d=new Date();const y=new Date(d-864e5);return[[today(),'النهارده'],[y.toISOString().slice(0,10),'امبارح']]}},
+    {k:'brokerId',l:'مكتب شريك',q:'في مكتب أو سمسار شريك في الصفقة؟',hint:'لو الصفقة بتاعتك لوحدك اختار «بدون»',t:'pick',opt:1,items:()=>S.brokers.map(b=>({id:b.id,title:b.name,sub:[b.phone,b.area].filter(Boolean).join(' · '),tag:b.kind})),empty:'مفيش مكاتب مسجلة — تقدر تتخطى السؤال ده',
+      onPick:(v,id)=>{const b=S.brokers.find(x=>x.id===id);if(b&&v.commission&&b.split&&!v.brokerShare)v.brokerShare=Math.round(v.commission*b.split/100)}},
+    {k:'brokerShare',l:'نصيب المكتب',q:v=>'نصيب '+(bName(v.brokerId)||'المكتب')+' من العمولة كام؟',t:'money',opt:1,when:v=>!!v.brokerId,
+      chips:v=>v.commission?[25,30,50].map(p=>[Math.round(v.commission*p/100),p+'% من عمولتك']):[],extra:v=>v.commission&&v.brokerShare!==''?`صافي عمولتك: <b>${fmt(v.commission-(Number(v.brokerShare)||0))}</b> ج.م`:''},
+    {k:'date',l:'التاريخ',q:'تاريخ الصفقة؟',t:'date',chips:()=>{const d=new Date();const y=new Date(d-864e5);return[[today(),'النهارده'],[isoLocal(y),'امبارح']]}},
     {k:'notes',l:'ملاحظات',q:'في ملاحظة على الصفقة؟',t:'textarea',opt:1,ph:'موعد المعاينة، شروط الدفع…'}];
+  if(col==='brokers')return[
+    {k:'kind',l:'النوع',q:'هتسجّل مكتب ولا سمسار؟',t:'choice',opts:[['مكتب عقاري','مكتب ليه مقر واسم',I.brokers],['سمسار حر','بيشتغل لوحده',QI.users]]},
+    {k:'name',l:'الاسم',q:v=>v.kind==='سمسار حر'?'اسم السمسار إيه؟':'اسم المكتب إيه؟',t:'text',req:1,ph:v=>v.kind==='سمسار حر'?'الاسم بالكامل':'مثال: مكتب النيل للعقارات'},
+    {k:'contact',l:'المسؤول',q:'مين المسؤول اللي بتتعامل معاه؟',t:'text',opt:1,when:v=>v.kind!=='سمسار حر',ph:'اسم الشخص'},
+    {k:'phone',l:'الموبايل',q:'رقم التواصل كام؟',t:'tel',req:1,ph:'01xxxxxxxxx',
+      check:v=>{const d=String(v.phone||'').replace(/\D/g,'');if(d.length<8)return 'الرقم ناقص، اكتبه كامل';if(S.brokers.some(b=>b.id!==(rec&&rec.id)&&b.phone===v.phone))return 'الرقم ده متسجل لمكتب تاني';return ''}},
+    {k:'area',l:'المنطقة',q:'بيشتغل في أنهي منطقة؟',t:'text',opt:1,ph:'اسم المنطقة أو الحي',chips:()=>[...new Set([...S.brokers,...S.units].map(x=>x.area).filter(Boolean))].slice(0,8).map(a=>[a,a])},
+    {k:'split',l:'قسمة العمولة',q:'بتقسموا العمولة بنسبة كام؟',hint:'نصيبه من عمولتك في الصفقات المشتركة',t:'num',suf:'%',opt:1,chips:()=>[[25,'25%'],[30,'30%'],[50,'50% (نص بنص)']]},
+    {k:'rating',l:'التقييم',q:'تقيّم التعامل معاه كام؟',hint:'من 1 لـ 5 نجوم',t:'stars',opt:1},
+    {k:'notes',l:'ملاحظات',q:'في ملاحظة عنه؟',t:'textarea',opt:1,ph:'سرعة الرد، نوع الوحدات اللي عنده…'}];
 }
-const TITLES={clients:['عميل جديد','تعديل العميل'],units:['وحدة جديدة','تعديل الوحدة'],deals:['صفقة جديدة','تعديل الصفقة']};
+const TITLES={clients:['عميل جديد','تعديل العميل'],units:['وحدة جديدة','تعديل الوحدة'],deals:['صفقة جديدة','تعديل الصفقة'],brokers:['مكتب أو سمسار جديد','تعديل المكتب']};
 let W=null;
 const fx=(x,v)=>typeof x==='function'?x(v):x;
 function openForm(col,id,pre){
   const rec=id?S[col].find(x=>x.id===id):null;
   if(col==='deals'&&!rec&&(!S.clients.length||!S.units.some(u=>u.status==='متاحة'))){toast(!S.clients.length?'سجّل عميل الأول':'مفيش وحدات متاحة — أضف وحدة الأول');return}
-  const def={clients:{type:'مشتري',status:'جديد',source:'فيسبوك'},units:{type:'شقة',status:'متاحة'},deals:{stage:'تواصل أول',date:today()}}[col];
+  const def={clients:{type:'مشتري',status:'جديد',source:'فيسبوك'},units:{type:'شقة',status:'متاحة'},deals:{stage:'تواصل أول',date:today()},brokers:{kind:'مكتب عقاري',split:50}}[col];
   W={col,rec,v:{...def,...(pre||{}),...(rec||{})},i:0,review:!!rec,dir:1,q:''};
   if(pre&&pre.clientId&&col==='deals')W.i=1;
   showModal('<div class="wiz" id="wiz" role="dialog" aria-modal="true"></div>',false,'wizs');
@@ -812,7 +935,8 @@ function showVal(s,v){
   if(x===''||x==null)return null;
   if(s.t==='money')return egp(x);
   if(s.t==='num')return `<span class="num">${fmt(x)}</span> ${s.suf||''}`;
-  if(s.t==='pick'){const it=(s.items()||[]).find(i=>i.id===x)||(s.k==='clientId'||s.k==='ownerId'?{title:cName(x)}:{title:uName(x)});return esc(it.title)}
+  if(s.t==='pick'){const it=(s.items()||[]).find(i=>i.id===x)||(s.k==='brokerId'?{title:bName(x)}:s.k==='clientId'||s.k==='ownerId'?{title:cName(x)}:{title:uName(x)});return esc(it.title)}
+  if(s.t==='stars')return stars(x);
   if(s.t==='choice')return pill(x)||esc(x);
   return `<span style="white-space:pre-wrap">${esc(x)}</span>`;
 }
@@ -838,6 +962,9 @@ function drawWiz(){
   }else if(s.t==='pick'){
     const items=s.items();
     ctl=items.length?`${items.length>5?`<div class="pick-search">${I.search}<input class="big-in" id="wq" type="search" placeholder="ابحث…" value="${esc(W.q)}" autocomplete="off"></div>`:''}<div class="picklist" id="wpl"></div>`:`<div class="pick-empty">${esc(s.empty||'لا يوجد')}</div>`;
+  }else if(s.t==='stars'){
+    const n=Number(val)||0;
+    ctl=`<div class="stars big pick-stars">${[1,2,3,4,5].map(i=>`<button type="button" class="${i<=n?'on':''}" data-w="star" data-v="${i}" title="${i} من 5">${I.star}</button>`).join('')}</div><div class="readout">${['','ضعيف','مقبول','كويس','كويس جداً','ممتاز'][n]||'دوس على عدد النجوم'}</div>`;
   }else if(s.t==='textarea'){
     ctl=`<textarea class="big-in" id="wi" placeholder="${esc(fx(s.ph,v)||'')}">${esc(val)}</textarea>`;
   }else if(s.t==='date'){
@@ -853,8 +980,8 @@ function drawWiz(){
    <h3 class="wiz-q">${esc(fx(s.q,v))}</h3>${s.hint&&fx(s.hint,v)?`<p class="wiz-hint">${esc(fx(s.hint,v))}</p>`:''}
    ${ctl}<p class="wiz-err" id="werr"></p></div>
    <div class="wiz-f">${W.i>0?`<button class="btn ghost" type="button" data-w="prev">${QI.prev}رجوع</button>`:''}<span class="sp"></span>
-   ${s.opt&&(val===''||val==null)&&s.t!=='choice'?`<button class="btn ghost" type="button" data-w="skip">تخطّي</button>`:''}
-   ${s.t==='choice'?'':`<span class="kbd">Enter ↵</span>`}
+   ${s.opt&&(val===''||val==null)&&s.t!=='choice'&&!(s.t==='pick'&&s.items().length)?`<button class="btn ghost" type="button" data-w="skip">تخطّي</button>`:''}
+   ${s.t==='choice'||s.t==='stars'?'':`<span class="kbd">Enter ↵</span>`}
    <button class="btn lg" type="button" data-w="next">${W.backTo?'تم':last?'مراجعة':'التالي'}${QI.next}</button></div>`;
   if(s.t==='pick')drawPick();
   updReadout();
@@ -864,7 +991,8 @@ function drawPick(){
   const s=vis()[W.i];const pl=$('#wpl');if(!pl)return;
   const q=W.q.trim().toLowerCase();
   const items=s.items().filter(i=>!q||[i.title,i.sub,i.tag].join(' ').toLowerCase().includes(q));
-  pl.innerHTML=items.length?items.map(i=>`<button type="button" class="pitem" data-w="pickid" data-v="${i.id}" aria-pressed="${W.v[s.k]===i.id}"><span class="ini">${ini(i.title)}</span><span class="t"><b>${esc(i.title)}</b>${i.sub?`<small class="num" style="direction:rtl">${esc(i.sub)}</small>`:''}</span>${i.tag?pill(i.tag):''}</button>`).join(''):'<div class="pick-empty">مفيش نتايج</div>';
+  const none=s.opt&&!q?`<button type="button" class="pitem" data-w="pickid" data-v="" aria-pressed="${!W.v[s.k]}"><span class="ini" style="background:var(--sunk);color:var(--faint)">—</span><span class="t"><b>بدون</b><small>${s.k==='brokerId'?'مفيش مكتب في النص':'مش محدد'}</small></span></button>`:'';
+  pl.innerHTML=none+(items.length?items.map(i=>`<button type="button" class="pitem" data-w="pickid" data-v="${i.id}" aria-pressed="${W.v[s.k]===i.id}"><span class="ini">${ini(i.title)}</span><span class="t"><b>${esc(i.title)}</b>${i.sub?`<small class="num" style="direction:rtl">${esc(i.sub)}</small>`:''}</span>${i.tag?pill(i.tag):''}</button>`).join(''):'<div class="pick-empty">مفيش نتايج</div>');
 }
 function updReadout(){
   const ro=$('#wro');if(!ro)return;
@@ -902,7 +1030,7 @@ async function wSave(){
   if(missing){W.review=false;W.i=vis().indexOf(missing);drawWiz();wErr('السؤال ده مطلوب');return}
   const btn=$('[data-w="save"]');if(btn)btn.disabled=true;
   closeModal();W=null;await save(col,o);if(col==='deals')await syncUnit(o);
-  toast(rec?'تم حفظ التعديلات':{clients:'العميل اتسجّل',units:'الوحدة اتضافت',deals:'الصفقة اتسجّلت'}[col]);
+  toast(rec?'تم حفظ التعديلات':{clients:'العميل اتسجّل',units:'الوحدة اتضافت',deals:'الصفقة اتسجّلت',brokers:'المكتب اتسجّل'}[col]);
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-w]');if(!b||!W)return;
@@ -913,7 +1041,8 @@ document.addEventListener('click',e=>{
   else if(a==='save')wSave();
   else if(a==='goto'){W.review=false;W.i=+b.dataset.i;W.backTo=true;W.dir=-1;drawWiz()}
   else if(a==='pick'){W.v[s.k]=b.dataset.v;document.querySelectorAll('.opt').forEach(x=>x.setAttribute('aria-pressed',x===b));setTimeout(wNext,170)}
-  else if(a==='pickid'){W.v[s.k]=b.dataset.v;s.onPick&&s.onPick(W.v,b.dataset.v);document.querySelectorAll('.pitem').forEach(x=>x.setAttribute('aria-pressed',x===b));setTimeout(wNext,170)}
+  else if(a==='star'){W.v[s.k]=+b.dataset.v;document.querySelectorAll('.pick-stars button').forEach(x=>x.classList.toggle('on',+x.dataset.v<=W.v[s.k]));setTimeout(wNext,260)}
+  else if(a==='pickid'){W.v[s.k]=b.dataset.v;if(b.dataset.v)s.onPick&&s.onPick(W.v,b.dataset.v);document.querySelectorAll('.pitem').forEach(x=>x.setAttribute('aria-pressed',x===b));setTimeout(wNext,170)}
   else if(a==='chip'){const n=(s.t==='money'||s.t==='num')?Number(b.dataset.v):b.dataset.v;W.v[s.k]=n;const i=$('#wi');if(i)i.value=(s.t==='money'||s.t==='num')?fmt(n):n;document.querySelectorAll('.qchip').forEach(x=>x.setAttribute('aria-pressed',x===b));updReadout();if(s.t!=='money'&&s.t!=='num')setTimeout(wNext,170)}
 });
 document.addEventListener('input',e=>{
@@ -932,12 +1061,119 @@ document.addEventListener('keydown',e=>{
   if(W.review)wSave();else wNext();
 });
 
+/* ---------- downloads, backup, restore ---------- */
+const COLS={
+  brokers:['id','name','kind','contact','phone','area','rating','split','notes','createdAt','updatedAt'],
+  clients:['id','name','phone','type','status','source','brokerId','budget','want','notes','createdAt','updatedAt'],
+  units:['id','title','type','area','size','floor','price','status','ownerId','brokerId','notes','createdAt','updatedAt'],
+  deals:['id','clientId','unitId','brokerId','stage','date','value','commission','brokerShare','closedAt','notes','createdAt','updatedAt']
+};
+const SEC_AR={clients:'العملاء',units:'الوحدات',deals:'الصفقات',brokers:'المكاتب'};
+const d10=v=>v?String(v).slice(0,10):'';
+const nz=v=>v===''||v==null?'':Number(v);
+const XROWS={
+  clients:a=>a.map(c=>({'الاسم':c.name,'الموبايل':c.phone,'النوع':c.type,'الحالة':c.status,'المصدر':c.source,'المكتب/السمسار':bName(c.brokerId),'الميزانية (ج.م)':nz(c.budget),'المطلوب':c.want,'عدد الصفقات':S.deals.filter(d=>d.clientId===c.id).length,'ملاحظات':c.notes,'تاريخ التسجيل':d10(c.createdAt)})),
+  units:a=>a.map(u=>({'الوحدة':u.title,'النوع':u.type,'المنطقة':u.area,'المساحة (م²)':nz(u.size),'الدور':u.floor,'السعر (ج.م)':nz(u.price),'سعر المتر':u.price&&u.size?Math.round(u.price/u.size):'','المالك':u.ownerId?cName(u.ownerId):'','عن طريق':bName(u.brokerId),'الحالة':u.status,'ملاحظات':u.notes,'تاريخ الإضافة':d10(u.createdAt)})),
+  deals:a=>a.map(d=>({'العميل':cName(d.clientId),'موبايل العميل':(S.clients.find(c=>c.id===d.clientId)||{}).phone||'','الوحدة':uName(d.unitId),'المرحلة':d.stage,'قيمة الصفقة (ج.م)':nz(d.value),'العمولة (ج.م)':nz(d.commission),'المكتب الشريك':bName(d.brokerId),'نصيب المكتب (ج.م)':nz(d.brokerShare),'صافي العمولة (ج.م)':d.commission?(Number(d.commission)||0)-(Number(d.brokerShare)||0):'','التاريخ':d.date,'تاريخ الإغلاق':d.closedAt,'ملاحظات':d.notes})),
+  brokers:a=>a.map(b=>({'الاسم':b.name,'النوع':b.kind,'المسؤول':b.contact,'الموبايل':b.phone,'المنطقة':b.area,'التقييم (من 5)':nz(b.rating),'قسمة العمولة %':nz(b.split),'وحدات':S.units.filter(u=>u.brokerId===b.id).length,'صفقات':S.deals.filter(d=>d.brokerId===b.id).length,'عملاء':S.clients.filter(c=>c.brokerId===b.id).length,'ملاحظات':b.notes}))
+};
+function sheetOf(rows){
+  const ws=XLSX.utils.json_to_sheet(rows.length?rows:[{'':'لا توجد بيانات'}]);
+  const keys=Object.keys(rows[0]||{'':1});
+  ws['!cols']=keys.map(k=>({wch:Math.min(42,Math.max(10,k.length+2,...rows.map(r=>String(r[k]??'').length+2)))}));
+  return ws;
+}
+function csvOf(rows){
+  const keys=Object.keys(rows[0]||{});const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  return '﻿'+[keys.map(q).join(','),...rows.map(r=>keys.map(k=>q(r[k])).join(','))].join('\r\n');
+}
+async function saveFile(name,blob){
+  try{
+    if(window.claude&&typeof window.claude.use==='function'){
+      const dl=await window.claude.use('downloads');
+      if(dl){await dl.save({filename:name,data:blob});toast('تم التحميل');return}
+    }
+  }catch(e){if(e&&e.code==='declined')return;toast('تعذّر التحميل');return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);toast('تم التحميل');
+}
+function book(sheets){
+  const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
+  sheets.forEach(([n,rows])=>XLSX.utils.book_append_sheet(wb,sheetOf(rows),n));
+  return new Blob([XLSX.write(wb,{bookType:'xlsx',type:'array'})],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+async function exportSection(col){
+  const src=view===col?lastRows:S[col];
+  if(!src.length){toast('مفيش بيانات تتحمّل');return}
+  const rows=XROWS[col](src);
+  const name=`Alaa Deals - ${SEC_AR[col]} - ${today()}`;
+  if(window.XLSX)await saveFile(name+'.xlsx',book([[SEC_AR[col],rows]]));
+  else await saveFile(name+'.csv',new Blob([csvOf(rows)],{type:'text/csv'}));
+}
+async function exportAll(){
+  if(!window.XLSX){toast('ملف Excel مش جاهز، جرّب تاني بعد ثواني');return}
+  const k=(a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'');
+  await saveFile(`Alaa Deals - كل البيانات - ${today()}.xlsx`,book([['العملاء',XROWS.clients([...S.clients].sort(k))],['الوحدات',XROWS.units([...S.units].sort(k))],['الصفقات',XROWS.deals([...S.deals].sort(k))],['المكاتب',XROWS.brokers([...S.brokers].sort(k))]]));
+}
+async function exportJSON(){
+  const pick=(col,o)=>Object.fromEntries(COLS[col].filter(c=>o[c]!==undefined).map(c=>[c,o[c]]));
+  const data={app:'alaa-deals',version:2,exportedAt:new Date().toISOString(),...Object.fromEntries(Object.keys(COLS).map(c=>[c,S[c].map(o=>pick(c,o))]))};
+  await saveFile(`Alaa Deals - نسخة احتياطية - ${today()}.json`,new Blob([JSON.stringify(data,null,1)],{type:'application/json'}));
+}
+let pendingRestore=null;
+function openData(){
+  pendingRestore=null;
+  const n=Object.keys(COLS).map(c=>[c,S[c].length]);
+  const pwa=!(window.claude&&window.claude.use)&&(installEvt||/iphone|ipad|android/i.test(navigator.userAgent))&&!matchMedia('(display-mode: standalone)').matches;
+  showModal(`<div class="modal data-modal" role="dialog" aria-modal="true" style="max-width:620px"><div class="modal-h"><span class="mk">${I.download}</span><h3>تحميل البيانات</h3><button class="icon-btn" type="button" data-act="close" title="إغلاق">${I.x}</button></div>
+   <div class="modal-b">
+    <div class="dl-sum">${n.map(([c,k])=>`<div><b class="num">${k}</b><span>${SEC_AR[c]}</span></div>`).join('')}</div>
+    <div class="dl-grid">
+     <button type="button" class="dl-card" data-act="xall"><span class="oi">${I.sheet}</span><span><b>كل البيانات Excel</b><small>ملف واحد فيه 4 صفحات: العملاء والوحدات والصفقات والمكاتب</small></span></button>
+     <button type="button" class="dl-card" data-act="json"><span class="oi">${I.file}</span><span><b>نسخة احتياطية</b><small>ملف تقدر ترجّع منه كل البيانات في أي وقت</small></span></button>
+    </div>
+    <div><div class="dl-label">أو حمّل خانة واحدة</div><div class="qchips">${Object.keys(COLS).map(c=>`<button type="button" class="qchip" data-act="export" data-col="${c}">${I.download.replace('<svg','<svg width="14" height="14" style="vertical-align:-2px"')} ${SEC_AR[c]}</button>`).join('')}</div></div>
+    <div class="dl-restore" id="restoreBox">
+     <div><b>استرجاع نسخة احتياطية</b><small>بيضيف البيانات اللي في الملف ويحدّث الموجود، ومش بيمسح حاجة</small></div>
+     <button type="button" class="btn ghost sm" data-act="restore">${I.upload}اختار الملف</button>
+     <input type="file" id="restoreIn" accept=".json,application/json" hidden>
+    </div>
+    ${pwa?`<div class="dl-restore install"><div><b>ثبّت Alaa Deals على جهازك</b><small>${installEvt?'يفتح زي التطبيق من الشاشة الرئيسية':(/iphone|ipad/i.test(navigator.userAgent)?'من Safari: زر المشاركة ← «إضافة إلى الشاشة الرئيسية»':'من قايمة المتصفح ← «تثبيت التطبيق»')}</small></div>${installEvt?`<button type="button" class="btn gold sm" data-act="install">${I.device}تثبيت</button>`:''}</div>`:''}
+   </div></div>`);
+  $('#restoreIn').addEventListener('change',readRestore);
+}
+async function readRestore(e){
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  let d;try{d=JSON.parse(await f.text())}catch(err){toast('الملف ده مش نسخة احتياطية صالحة');return}
+  if(!d||d.app!=='alaa-deals'||!Object.keys(COLS).some(c=>Array.isArray(d[c]))){toast('الملف ده مش نسخة احتياطية من Alaa Deals');return}
+  pendingRestore={};
+  for(const c of Object.keys(COLS)){
+    pendingRestore[c]=(Array.isArray(d[c])?d[c]:[]).filter(o=>o&&typeof o==='object'&&o.id).map(o=>{const r={};COLS[c].forEach(k=>{if(o[k]!==undefined)r[k]=o[k]});return r});
+  }
+  const box=$('#restoreBox');
+  box.innerHTML=`<div><b>جاهز للاسترجاع</b><small>${Object.keys(COLS).map(c=>`${pendingRestore[c].length} ${SEC_AR[c]}`).join(' · ')} — من ${esc(d10(d.exportedAt))}</small></div><button type="button" class="btn gold sm" data-act="doRestore">${I.upload}استرجاع</button>`;
+}
+async function doRestore(){
+  if(!pendingRestore)return;
+  const btn=$('[data-act="doRestore"]');if(btn){btn.disabled=true;btn.textContent='جاري الاسترجاع…'}
+  try{
+    for(const c of TABLES){if(pendingRestore[c]&&pendingRestore[c].length)await bulkSave(c,pendingRestore[c])}
+    const total=Object.values(pendingRestore).reduce((a,x)=>a+x.length,0);
+    pendingRestore=null;closeModal();
+    if(typeof loadAll==='function')await loadAll();else render();
+    toast(`تم استرجاع ${total} سجل`);
+  }catch(err){console.error(err);toast('تعذّر الاسترجاع: '+(err.message||''));if(btn){btn.disabled=false;btn.textContent='استرجاع'}}
+}
+let installEvt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e});
+async function installApp(){if(!installEvt)return;installEvt.prompt();try{const r=await installEvt.userChoice;if(r.outcome==='accepted')toast('تم التثبيت')}catch(e){}installEvt=null;closeModal()}
+
 function confirmDel(col,id){
   const rec=S[col].find(x=>x.id===id);if(!rec)return;
   const name=rec.name||rec.title||cName(rec.clientId);
-  const linked=col==='clients'?S.deals.filter(d=>d.clientId===id).length:col==='units'?S.deals.filter(d=>d.unitId===id).length:0;
+  const linked=col==='clients'?S.deals.filter(d=>d.clientId===id).length:col==='units'?S.deals.filter(d=>d.unitId===id).length:col==='brokers'?[...S.deals,...S.units,...S.clients].filter(x=>x.brokerId===id).length:0;
   showModal(`<div class="modal" role="alertdialog" aria-modal="true" style="max-width:440px"><div class="modal-h"><span class="mk" style="background:var(--bad-soft);color:var(--bad)">${I.del}</span><h3>حذف «${esc(name)}»؟</h3></div>
-   <div class="modal-b"><p class="hint">${linked?`مرتبط بـ ${linked} صفقة، وهتفضل الصفقات موجودة بس من غير ${col==='clients'?'اسم العميل':'اسم الوحدة'}. `:''}الحذف نهائي ومش هينفع ترجعه.</p></div>
+   <div class="modal-b"><p class="hint">${linked?(col==='brokers'?`مرتبط بـ ${linked} سجل (صفقات ووحدات وعملاء)، وهيفضلوا موجودين بس من غير اسم المكتب. `:`مرتبط بـ ${linked} صفقة، وهتفضل الصفقات موجودة بس من غير ${col==='clients'?'اسم العميل':'اسم الوحدة'}. `):''}الحذف نهائي ومش هينفع ترجعه.</p></div>
    <div class="modal-f"><button class="btn danger" type="button" id="yesDel">حذف نهائي</button><button class="btn ghost" type="button" data-act="close">إلغاء</button></div></div>`);
   $('#yesDel').addEventListener('click',async()=>{closeModal();await remove(col,id);toast('تم الحذف')});
 }
@@ -964,6 +1200,7 @@ function closeModal(){$('#layer').innerHTML='';W=null}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
 initStore();
+if('serviceWorker' in navigator&&location.protocol==='https:')window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 })();
 </script>
 
